@@ -197,8 +197,11 @@ def _build_mock_answer(question: str, records: list[Record]) -> str:
     Property and transaction queries receive a descriptive 1908 household summary.
     All other matched queries default to the classic Fido institutional memory answer.
 
+    Callers must ensure ``records`` is non-empty; empty retrieval is handled by the
+    route handler before this helper is invoked.
+
     :param str question: Raw user question text from the request payload.
-    :param list[Record] records: Retrieved memory records for the question.
+    :param list[Record] records: Non-empty retrieved memory records for the question.
     :returns: Mock answer string aligned with the question intent.
     :rtype: str
     """
@@ -206,10 +209,7 @@ def _build_mock_answer(question: str, records: list[Record]) -> str:
     if any(term in lowered_question for term in _REAL_ESTATE_QUESTION_TERMS):
         return _REAL_ESTATE_SUMMARY
 
-    if records:
-        return _FIDO_ANSWER
-
-    return _EMPTY_ANSWER
+    return _FIDO_ANSWER
 
 
 def _calculate_confidence(records: list[Record]) -> float:

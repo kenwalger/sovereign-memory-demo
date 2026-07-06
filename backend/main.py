@@ -121,9 +121,9 @@ _DEFAULT_PRODUCTION_ORIGIN = "https://demo.sovereignsystems.io"
 def _resolve_allowed_origins() -> list[str]:
     """Build the CORS allow-list from environment-scoped production and dev origins.
 
-    Localhost origins are included only when ``SOVEREIGN_ENV`` is ``development``
-    or when ``SOVEREIGN_ALLOWED_ORIGINS`` is completely absent. In all other
-    cases the allow-list is locked to configured production domains.
+    Localhost origins are included only when ``SOVEREIGN_ENV`` is explicitly set
+    to ``development``. When ``SOVEREIGN_ALLOWED_ORIGINS`` is absent, the allow-list
+    falls back to the secure production default without injecting local ports.
 
     :returns: Distinct origin URLs permitted for cross-origin browser access.
     :rtype: list[str]
@@ -140,12 +140,7 @@ def _resolve_allowed_origins() -> list[str]:
             if origin.strip()
         ]
 
-    include_local = (
-        sovereign_env == "development"
-        or configured_origins is None
-    )
-
-    if include_local:
+    if sovereign_env == "development":
         return list(_LOCAL_DEV_ORIGINS) + production_origins
 
     return production_origins

@@ -89,8 +89,8 @@ SOVEREIGN_NODE_SECRET="your-secret-key" uv run uvicorn main:app --reload --port 
 
 **Optional:** `SOVEREIGN_ALLOWED_ORIGINS` configures production CORS origins
 (comma-separated). Defaults to `https://demo.sovereignsystems.io` when unset.
-Local Vite dev hosts are permitted only when `SOVEREIGN_ENV=development` or when
-`SOVEREIGN_ALLOWED_ORIGINS` is not set.
+Local Vite dev hosts are permitted only when `SOVEREIGN_ENV=development` is set
+explicitly alongside your local secret configuration.
 
 On startup the backend initializes the SQLite schema and ingests the
 reference dataset from `datasets/` into `memory_store/memory.db`.

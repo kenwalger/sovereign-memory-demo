@@ -59,6 +59,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Question lifecycle 500s from unhandled duplicate receipts and unnecessary airlock passes on empty retrieval
 - Complex query recall failures from strict AND keyword matching across long questions
 - Tracked `.sovereign_keys` identity material removed from Git index; cryptographic paths now gitignored
+- CORS localhost origins no longer injected when `SOVEREIGN_ALLOWED_ORIGINS` is absent; require `SOVEREIGN_ENV=development`
+- Removed unreachable empty-records branch from `_build_mock_answer`
+- Restored `system` as a searchable keyword by removing it from author signature stop words
 
 ### Security
 

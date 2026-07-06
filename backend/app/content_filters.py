@@ -27,7 +27,6 @@ AUTHOR_SIGNATURE_TERMS = frozenset({
     "profile",
     "signature",
     "signed",
-    "system",
 })
 """frozenset[str]: Tokens that must never participate in keyword search intersection."""
 

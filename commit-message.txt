@@ -1,5 +1,4 @@
-feat(ui): align brand identity and harden production CORS scope
+fix(security): tighten CORS isolation and restore domain search tokens
 
-Apply Sovereign Systems terminal palette and specification copy to the
-frontend, gate localhost CORS behind SOVEREIGN_ENV, and decode dataset
-bytes to UTF-8 before sanitization and JSON parsing.
+Require SOVEREIGN_ENV=development for localhost CORS origins, remove dead
+mock-answer branch, and drop system from author signature stop words.

@@ -144,3 +144,9 @@ Cross-referenced against [Technical Specification v1](project_specs/sovereign-me
 - [x] Terminal design system palette (obsidian, steel, amber/gold telemetry)
 - [x] `SOVEREIGN_ENV` development gate for localhost CORS origins
 - [x] Dataset ingestion UTF-8 decode before text sanitization and JSON parsing
+
+## Phase 12 — Final Defect Resolution
+
+- [x] CORS localhost isolation requires explicit `SOVEREIGN_ENV=development`
+- [x] `_build_mock_answer` dead-code branch removed; contract assumes non-empty records
+- [x] `system` token removed from author signature stop-word filter
