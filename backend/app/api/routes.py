@@ -7,7 +7,7 @@ import json
 from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException, status
-from sovereign_airlock import AirlockPolicyViolation
+from sovereign_airlock import AirlockPolicyViolation, AirlockResult
 
 from app.api.dependencies import (
     get_memory_service,
@@ -176,7 +176,7 @@ def _generate_or_fetch_receipt(
     receipt_service: ReceiptService,
     records: list[Record],
     confidence: float,
-    airlock_result,
+    airlock_result: AirlockResult,
     sieved_evidence: list[str],
 ) -> dict[str, Any]:
     """Generate a receipt or return an existing receipt for identical evidence.
@@ -184,7 +184,7 @@ def _generate_or_fetch_receipt(
     :param ReceiptService receipt_service: Service used to create or fetch receipts.
     :param list[Record] records: Evidence records backing the answer.
     :param float confidence: Aggregated confidence score for the receipt.
-    :param airlock_result: Successful airlock processing result for SDK metadata.
+    :param AirlockResult airlock_result: Successful airlock processing result for SDK metadata.
     :param list[str] sieved_evidence: Minimized evidence strings for persistence.
     :returns: Parsed forensic receipt JSON body.
     :rtype: dict[str, Any]

@@ -72,6 +72,11 @@ Cross-referenced against [Technical Specification v1](project_specs/sovereign-me
 - [ ] Screenshots and video walkthrough
 - [ ] Conference-ready demonstration assets
 
+## Style Guide Audit (`.cursorrules` Compliance)
+
+- [x] CPU-bound question sanitization offloaded via `asyncio.to_thread` in `MemoryService.retrieve_context`
+- [x] Explicit `AirlockResult` type annotation on `_generate_or_fetch_receipt` route helper
+
 ## Production Robustness (PR Final Polish)
 
 - [x] Atomic receipt ID allocation via SQLite autoincrement sequence

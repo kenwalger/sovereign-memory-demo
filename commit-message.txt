@@ -1,6 +1,5 @@
-fix(robustness): resolve concurrency, ledger leak, and error rendering
+style(concurrency): offload sanitization and annotate AirlockResult
 
-Replace non-atomic receipt ID counting with SQLite autoincrement sequences,
-offload receipt persistence via asyncio.to_thread, inject a singleton
-SovereignLedger into AirlockBoundary, and unpack structured FastAPI error
-detail objects in the frontend API client.
+Wrap MemoryService question sanitization in asyncio.to_thread per
+.cursorrules non-blocking invariants, and add an explicit AirlockResult
+type hint to the receipt generation route helper.

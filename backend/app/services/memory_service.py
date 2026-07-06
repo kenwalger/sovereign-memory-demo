@@ -85,15 +85,15 @@ class MemoryService:
     async def retrieve_context(self, question: str) -> list[Record]:
         """Sanitize a question and retrieve matching memory record chunks.
 
-        CPU-bound repository search is offloaded to a worker thread to avoid
-        blocking the event loop.
+        CPU-bound question sanitization and repository search are offloaded to
+        worker threads to avoid blocking the event loop.
 
         :param str question: Raw user question text.
         :returns: Matching memory records, or an empty list when the sanitized
             query contains no searchable terms.
         :rtype: list[Record]
         """
-        sanitized_query = self._sanitize_question(question)
+        sanitized_query = await asyncio.to_thread(self._sanitize_question, question)
         if not sanitized_query:
             return []
 

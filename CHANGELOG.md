@@ -57,3 +57,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - `.gitignore` now blocks `*.db` and `*.sqlite3` repository-wide
+- `MemoryService.retrieve_context` offloads regex sanitization via `asyncio.to_thread`
+- `_generate_or_fetch_receipt` declares explicit `AirlockResult` parameter typing
