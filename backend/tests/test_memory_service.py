@@ -110,14 +110,15 @@ async def test_retrieved_records_have_document_relationship(
     assert record.document.filename == "property_ledger_1908.txt"
 
 
-def test_assemble_source_attribution_maps_provenance(
+@pytest.mark.asyncio
+async def test_assemble_source_attribution_maps_provenance(
     memory_repository: MemoryRepository,
     memory_service: MemoryService,
     ingested_corpus: None,
 ) -> None:
     """Source attribution exposes unbroken record-to-document provenance."""
     records = memory_repository.search_records("property ledger fido", limit=1)
-    attributions = memory_service.assemble_source_attribution(records)
+    attributions = await memory_service.assemble_source_attribution(records)
 
     assert len(attributions) == 1
     attribution = attributions[0]
@@ -128,11 +129,12 @@ def test_assemble_source_attribution_maps_provenance(
     assert attribution.record_classification == "property_ledger"
 
 
-def test_assemble_source_attribution_empty_records_returns_empty_list(
+@pytest.mark.asyncio
+async def test_assemble_source_attribution_empty_records_returns_empty_list(
     memory_service: MemoryService,
 ) -> None:
     """An empty retrieval yields an empty attribution list."""
-    assert memory_service.assemble_source_attribution([]) == []
+    assert await memory_service.assemble_source_attribution([]) == []
 
 
 def test_get_document_by_id_returns_metadata(

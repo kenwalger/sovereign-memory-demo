@@ -1,6 +1,5 @@
-fix(api): resolve DetachedInstanceError and expand token demo corpus
+fix(hardening): exclude WAL artifacts and tighten input boundaries
 
-Materialize receipt JSON inside the database session boundary, expunge
-generated receipt ORM instances safely, expand the 1908 property ledger
-with verbose boilerplate for sieve token savings, and ignore tsbuildinfo
-artifacts in the frontend workspace.
+Ignore SQLite WAL/SHM sidecars in git, cap QuestionRequest length at 1000
+characters, offload provenance lookups via asyncio.to_thread, and escape
+LIKE wildcards in memory repository search terms.

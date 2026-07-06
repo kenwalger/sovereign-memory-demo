@@ -8,6 +8,20 @@ from sqlalchemy.orm import Session, joinedload, sessionmaker
 from app.models import Document, Record
 
 
+def _escape_like_term(term: str) -> str:
+    """Escape SQL ``LIKE`` wildcard characters in a user-supplied search term.
+
+    :param str term: Sanitized search token before pattern interpolation.
+    :returns: Term with ``%``, ``_``, and escape characters neutralized.
+    :rtype: str
+    """
+    return (
+        term.replace("\\", "\\\\")
+        .replace("%", "\\%")
+        .replace("_", "\\_")
+    )
+
+
 class MemoryRepository:
     """Execute SQLAlchemy 2.0 queries against ingested memory records.
 
@@ -49,11 +63,11 @@ class MemoryRepository:
         )
 
         for term in terms:
-            pattern = f"%{term}%"
+            pattern = f"%{_escape_like_term(term)}%"
             statement = statement.where(
                 or_(
-                    func.lower(Record.title).like(pattern),
-                    func.lower(Record.content).like(pattern),
+                    func.lower(Record.title).like(pattern, escape="\\"),
+                    func.lower(Record.content).like(pattern, escape="\\"),
                 )
             )
 

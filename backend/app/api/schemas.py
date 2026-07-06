@@ -8,10 +8,11 @@ from pydantic import BaseModel, Field, field_validator
 class QuestionRequest(BaseModel):
     """Inbound question payload.
 
-    :ivar str question: Non-empty user question after whitespace trimming.
+    :ivar str question: Non-empty user question after whitespace trimming,
+        bounded to a production-safe maximum length.
     """
 
-    question: str = Field(min_length=1)
+    question: str = Field(min_length=1, max_length=1000)
 
     @field_validator("question")
     @classmethod

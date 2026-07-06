@@ -103,11 +103,29 @@ class MemoryService:
             self._retrieval_limit,
         )
 
-    def assemble_source_attribution(
+    async def assemble_source_attribution(
         self,
         records: list[Record],
     ) -> list[SourceAttribution]:
         """Map retrieved records back to their parent document metadata.
+
+        Repository fallback lookups are offloaded to a worker thread to avoid
+        blocking the event loop.
+
+        :param list[Record] records: Retrieved memory records to attribute.
+        :returns: Provenance mappings for records with resolvable documents.
+        :rtype: list[SourceAttribution]
+        """
+        if not records:
+            return []
+
+        return await asyncio.to_thread(self._assemble_source_attribution, records)
+
+    def _assemble_source_attribution(
+        self,
+        records: list[Record],
+    ) -> list[SourceAttribution]:
+        """Build provenance mappings for retrieved records on a worker thread.
 
         Records whose parent document cannot be resolved are skipped.
 

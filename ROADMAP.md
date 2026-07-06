@@ -87,3 +87,10 @@ Cross-referenced against [Technical Specification v1](project_specs/sovereign-me
 - [x] Receipt retrieval materialized inside session boundary (fixes `DetachedInstanceError`)
 - [x] Expanded `property_ledger_1908.txt` boilerplate for Prose Tax token savings demo
 - [x] Frontend `*.tsbuildinfo` gitignore and artifact cleanup
+
+## Critical Maintenance Hardening
+
+- [x] SQLite WAL/SHM sidecar exclusion in `.gitignore`
+- [x] `QuestionRequest` upper-bound validation (`max_length=1000`)
+- [x] `assemble_source_attribution` repository fallbacks offloaded via `asyncio.to_thread`
+- [x] SQL `LIKE` wildcard escaping in `MemoryRepository.search_records`

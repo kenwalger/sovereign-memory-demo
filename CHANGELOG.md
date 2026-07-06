@@ -58,8 +58,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- `.gitignore` now blocks `*.db` and `*.sqlite3` repository-wide
+- `.gitignore` now blocks `*.db`, `*.sqlite3`, and SQLite WAL/SHM sidecars (`*.db-shm`, `*.db-wal`, `*.sqlite3-shm`, `*.sqlite3-wal`) repository-wide
 - `MemoryService.retrieve_context` offloads regex sanitization via `asyncio.to_thread`
+- `MemoryService.assemble_source_attribution` offloads repository fallback lookups via `asyncio.to_thread`
 - `_generate_or_fetch_receipt` declares explicit `AirlockResult` parameter typing
+- `QuestionRequest.question` bounded to `max_length=1000` characters
+- `MemoryRepository.search_records` escapes `%` and `_` wildcards in `LIKE` patterns
 - `property_ledger_1908.txt` expanded with historical boilerplate, transaction tables, and administrative headers for sieve token-savings demos
 - `frontend/.gitignore` blocks `*.tsbuildinfo` build artifacts

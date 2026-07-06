@@ -75,7 +75,7 @@ async def ask_question(
 
     sieved_evidence = _split_sieved_evidence(airlock_result.sieved_content)
     answer = _build_mock_answer(records)
-    attributions = memory_service.assemble_source_attribution(records)
+    attributions = await memory_service.assemble_source_attribution(records)
     sources = [
         SourceAttributionResponse(
             record_id=attribution.record_id,
