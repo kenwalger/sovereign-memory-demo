@@ -10,7 +10,7 @@ from typing import Any
 
 from pydantic import ValidationError
 from sqlalchemy import func, select
-from sqlalchemy.orm import Session, sessionmaker
+from sqlalchemy.orm import Session, joinedload, sessionmaker
 
 from app.content_filters import strip_author_footers
 from app.models import (
@@ -113,11 +113,25 @@ class DatasetService:
     def _load_existing_documents(self) -> list[Document]:
         """Load persisted source documents without re-ingesting dataset files.
 
+        Eager-loads child records and expunges hydrated instances so relationship
+        pointers remain valid after the session context closes.
+
         :returns: All document rows currently stored in the database.
         :rtype: list[Document]
         """
         with self._session_factory() as session:
-            return list(session.scalars(select(Document)).all())
+            documents = list(
+                session.scalars(
+                    select(Document).options(joinedload(Document.records))
+                )
+                .unique()
+                .all()
+            )
+            for document in documents:
+                for record in document.records:
+                    session.expunge(record)
+                session.expunge(document)
+            return documents
 
     def load_record(
         self,

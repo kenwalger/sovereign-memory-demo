@@ -1,4 +1,5 @@
-fix(security): tighten CORS isolation and restore domain search tokens
+fix(backend): close concurrency loops and harden secret validation
 
-Require SOVEREIGN_ENV=development for localhost CORS origins, remove dead
-mock-answer branch, and drop system from author signature stop words.
+Wrap receipt flush and commit in IntegrityError handling, eager-load
+dataset document records to prevent detachment, and reject blank
+SOVEREIGN_NODE_SECRET values at startup.

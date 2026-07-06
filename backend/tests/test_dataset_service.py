@@ -192,6 +192,8 @@ async def test_reload_skips_reingestion_when_documents_exist(
     service = DatasetService(datasets_path, session_factory)
 
     await service.load_dataset()
-    await service.load_dataset()
+    documents = await service.load_dataset()
 
     assert count_documents() == 4
+    assert len(documents) == 4
+    assert all(document.records for document in documents)

@@ -46,9 +46,11 @@ def _require_sovereign_node_secret() -> None:
 
     :returns: None
     :rtype: None
-    :raises RuntimeError: If ``SOVEREIGN_NODE_SECRET`` is not configured.
+    :raises RuntimeError: If ``SOVEREIGN_NODE_SECRET`` is not configured or is
+        blank whitespace.
     """
-    if not os.environ.get("SOVEREIGN_NODE_SECRET"):
+    secret = os.environ.get("SOVEREIGN_NODE_SECRET")
+    if not secret or not secret.strip():
         raise RuntimeError(_MISSING_SOVEREIGN_NODE_SECRET_MESSAGE)
 
 

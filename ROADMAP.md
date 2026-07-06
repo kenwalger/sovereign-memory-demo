@@ -150,3 +150,9 @@ Cross-referenced against [Technical Specification v1](project_specs/sovereign-me
 - [x] CORS localhost isolation requires explicit `SOVEREIGN_ENV=development`
 - [x] `_build_mock_answer` dead-code branch removed; contract assumes non-empty records
 - [x] `system` token removed from author signature stop-word filter
+
+## Defensive System Refactor
+
+- [x] Receipt flush/commit `IntegrityError` envelope raises `ReceiptDuplicateError`
+- [x] Dataset reload uses `joinedload(Document.records)` with session expunge
+- [x] Whitespace-only `SOVEREIGN_NODE_SECRET` rejected at startup

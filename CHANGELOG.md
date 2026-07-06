@@ -62,6 +62,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CORS localhost origins no longer injected when `SOVEREIGN_ALLOWED_ORIGINS` is absent; require `SOVEREIGN_ENV=development`
 - Removed unreachable empty-records branch from `_build_mock_answer`
 - Restored `system` as a searchable keyword by removing it from author signature stop words
+- Flush-time `IntegrityError` on receipt `payload_hash` collisions mapped to `ReceiptDuplicateError`
+- `_load_existing_documents` eager-loads and expunges `Document.records` to prevent detachment errors
+- `SOVEREIGN_NODE_SECRET` validation rejects whitespace-only environment values
 
 ### Security
 

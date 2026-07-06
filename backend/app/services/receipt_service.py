@@ -101,30 +101,31 @@ class ReceiptService:
                 answer_id="",
             )
             session.add(receipt)
-            session.flush()
-
-            receipt_id = self._format_receipt_id(receipt.sequence)
-            answer_id = f"ANS-{receipt.sequence:04d}"
-            receipt.id = receipt_id
-            receipt.answer_id = answer_id
-
-            if forensic_metadata is None:
-                forensic_metadata = build_forensic_seal(payload_hash, receipt_id)
-                ledger_reference = forensic_metadata["ledger_reference"]
-                receipt.ledger_reference = ledger_reference
-
-            receipt_body: dict[str, Any] = {
-                "receipt_id": receipt_id,
-                "timestamp": timestamp,
-                "confidence": confidence_score,
-                "sources": sources,
-                "evidence": evidence_strings,
-                "ledger_reference": ledger_reference,
-                "metadata": forensic_metadata,
-            }
-            receipt.receipt_json = json.dumps(receipt_body)
 
             try:
+                session.flush()
+
+                receipt_id = self._format_receipt_id(receipt.sequence)
+                answer_id = f"ANS-{receipt.sequence:04d}"
+                receipt.id = receipt_id
+                receipt.answer_id = answer_id
+
+                if forensic_metadata is None:
+                    forensic_metadata = build_forensic_seal(payload_hash, receipt_id)
+                    ledger_reference = forensic_metadata["ledger_reference"]
+                    receipt.ledger_reference = ledger_reference
+
+                receipt_body: dict[str, Any] = {
+                    "receipt_id": receipt_id,
+                    "timestamp": timestamp,
+                    "confidence": confidence_score,
+                    "sources": sources,
+                    "evidence": evidence_strings,
+                    "ledger_reference": ledger_reference,
+                    "metadata": forensic_metadata,
+                }
+                receipt.receipt_json = json.dumps(receipt_body)
+
                 session.commit()
             except IntegrityError as exc:
                 session.rollback()
