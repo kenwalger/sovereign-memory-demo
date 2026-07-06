@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- React + Vite frontend with quad-panel UI (`QuestionPanel`, `AnswerPanel`, `EvidencePanel`, `ReceiptPanel`)
+- TypeScript API contracts and `frontend/src/services/api.ts` fetch client with TSDoc
+- Comprehensive Sphinx-style docstrings across backend modules per `.cursorrules`
+- Comprehensive TSDoc comments across frontend types, services, and components
+- FastAPI API router with `POST /api/questions` and `GET /api/receipts/{receipt_id}`
+- Unified question response contract: `answer`, `evidence`, `sources`, `receipt`
+- `ReceiptService.retrieve_receipt` and `retrieve_receipt_by_payload_hash` lookup methods
+- Integration test suite `backend/tests/test_api_routes.py` (5 HTTP lifecycle tests)
 - `ReceiptService.generate_forensic_receipt` with deterministic SHA-256 payload hashing
 - Forensic seal simulation (`app/receipts/seal.py`) mapping pre-sieve hash into signed metadata
 - `ReceiptDuplicateError` guard against unique `payload_hash` index violations

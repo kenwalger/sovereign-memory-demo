@@ -31,27 +31,49 @@ REQUIRED_DATASET_FILES: tuple[str, ...] = (
     "property_ledger_1908.txt",
     "photograph_catalog.json",
 )
+"""tuple[str, ...]: Filenames that must be present in the datasets directory."""
 
 DOCUMENT_TYPE_BY_SUFFIX: dict[str, str] = {
     ".json": "json",
     ".md": "markdown",
     ".txt": "text",
 }
+"""dict[str, str]: Mapping from file suffix to normalized document type label."""
 
 
 class DatasetService:
-    """Load, validate, and persist demo datasets into SQLite."""
+    """Load, validate, and persist demo datasets into SQLite.
+
+    :ivar Path _datasets_path: Root directory containing required demo dataset files.
+    :ivar sessionmaker[Session] _session_factory: Factory for transactional database sessions.
+    """
 
     def __init__(
         self,
         datasets_path: Path,
         session_factory: sessionmaker[Session],
     ) -> None:
+        """Initialize the dataset service.
+
+        :param Path datasets_path: Directory containing required demo dataset files.
+        :param sessionmaker[Session] session_factory: Factory used to persist
+            documents and records.
+        :returns: None
+        :rtype: None
+        """
         self._datasets_path = datasets_path
         self._session_factory = session_factory
 
     async def load_dataset(self) -> list[Document]:
-        """Parse all required dataset assets and persist them to the database."""
+        """Parse all required dataset assets and persist them to the database.
+
+        :returns: Persisted source document rows for each required dataset file.
+        :rtype: list[Document]
+        :raises DatasetFileNotFoundError: If any required dataset file is missing.
+        :raises DatasetEncodingError: If a dataset file cannot be decoded as UTF-8.
+        :raises DatasetSchemaError: If a dataset file violates its expected schema.
+        :raises DatasetValidationError: If a JSON row fails Pydantic validation.
+        """
         self._ensure_required_files()
 
         documents: list[Document] = []
@@ -67,7 +89,16 @@ class DatasetService:
         document: Document,
         record_payload: dict[str, Any],
     ) -> Record:
-        """Persist a validated semantic record linked to a source document."""
+        """Persist a validated semantic record linked to a source document.
+
+        :param Session session: Active database session for the insert.
+        :param Document document: Parent source document for the record.
+        :param dict[str, Any] record_payload: Normalized record fields including
+            ``id``, ``title``, ``content``, ``classification``, ``confidence``,
+            and ``provenance``.
+        :returns: Newly created, session-attached record row.
+        :rtype: Record
+        """
         record = Record(
             id=record_payload["id"],
             document_id=document.id,
@@ -87,7 +118,16 @@ class DatasetService:
         schema_name: str,
         payload: dict[str, Any],
     ) -> dict[str, Any]:
-        """Coerce and validate a single record payload against a known schema."""
+        """Coerce and validate a single record payload against a known schema.
+
+        :param Path path: Filesystem path to the dataset file containing the row.
+        :param str schema_name: Schema key (``accession`` or ``photograph``).
+        :param dict[str, Any] payload: Raw JSON object to validate.
+        :returns: Validated and coerced record fields as a plain dictionary.
+        :rtype: dict[str, Any]
+        :raises DatasetValidationError: If Pydantic validation fails.
+        :raises DatasetSchemaError: If ``schema_name`` is not recognized.
+        """
         try:
             if schema_name == "accession":
                 model = AccessionRecordSchema.model_validate(payload)
@@ -101,14 +141,29 @@ class DatasetService:
         raise DatasetSchemaError(path, f"Unknown record schema: {schema_name}")
 
     def _ensure_required_files(self) -> None:
-        """Fail fast when any required dataset asset is missing."""
+        """Fail fast when any required dataset asset is missing.
+
+        :returns: None
+        :rtype: None
+        :raises DatasetFileNotFoundError: If a required dataset file is absent.
+        """
         for filename in REQUIRED_DATASET_FILES:
             path = self._datasets_path / filename
             if not path.is_file():
                 raise DatasetFileNotFoundError(path)
 
     async def _ingest_file(self, filename: str) -> Document:
-        """Read, validate, and persist a single dataset file."""
+        """Read, validate, and persist a single dataset file.
+
+        File I/O is offloaded to a worker thread to avoid blocking the event loop.
+
+        :param str filename: Name of the dataset file within ``datasets_path``.
+        :returns: Persisted source document row with associated records.
+        :rtype: Document
+        :raises DatasetEncodingError: If the file is empty or not valid UTF-8.
+        :raises DatasetSchemaError: If the file extension or contents are invalid.
+        :raises DatasetValidationError: If JSON rows fail schema validation.
+        """
         path = self._datasets_path / filename
         raw_bytes = await asyncio.to_thread(path.read_bytes)
         text = self._decode_utf8(path, raw_bytes)
@@ -129,7 +184,14 @@ class DatasetService:
         return document
 
     def _decode_utf8(self, path: Path, raw_bytes: bytes) -> str:
-        """Decode dataset bytes using strict UTF-8 validation."""
+        """Decode dataset bytes using strict UTF-8 validation.
+
+        :param Path path: Filesystem path to the dataset file being decoded.
+        :param bytes raw_bytes: Raw file contents read from disk.
+        :returns: UTF-8 decoded text content.
+        :rtype: str
+        :raises DatasetEncodingError: If the file is empty or decoding fails.
+        """
         if not raw_bytes:
             raise DatasetEncodingError(path, "File is empty")
         try:
@@ -144,7 +206,15 @@ class DatasetService:
         document_type: str,
         content: str,
     ) -> Document:
-        """Create or replace a source document row for the given file."""
+        """Create or replace a source document row for the given file.
+
+        :param Session session: Active database session for the upsert.
+        :param str filename: Original dataset filename.
+        :param str document_type: Normalized document type label.
+        :param str content: Full decoded file contents.
+        :returns: Newly created document row flushed to the session.
+        :rtype: Document
+        """
         document_id = f"doc-{Path(filename).stem}"
         existing = session.get(Document, document_id)
         if existing is not None:
@@ -169,7 +239,17 @@ class DatasetService:
         document: Document,
         text: str,
     ) -> None:
-        """Parse JSON array datasets into normalized record rows."""
+        """Parse JSON array datasets into normalized record rows.
+
+        :param Session session: Active database session for record inserts.
+        :param Path path: Filesystem path to the JSON dataset file.
+        :param Document document: Parent document row for generated records.
+        :param str text: Decoded JSON file contents.
+        :returns: None
+        :rtype: None
+        :raises DatasetSchemaError: If JSON is malformed, empty, or unsupported.
+        :raises DatasetValidationError: If individual rows fail validation.
+        """
         try:
             payload = json.loads(text)
         except json.JSONDecodeError as exc:
@@ -232,7 +312,16 @@ class DatasetService:
         document: Document,
         text: str,
     ) -> None:
-        """Normalize markdown or plain-text datasets into a single record."""
+        """Normalize markdown or plain-text datasets into a single record.
+
+        :param Session session: Active database session for the record insert.
+        :param Path path: Filesystem path to the text dataset file.
+        :param Document document: Parent document row for the generated record.
+        :param str text: Decoded file contents.
+        :returns: None
+        :rtype: None
+        :raises DatasetSchemaError: If the text content is empty after stripping.
+        """
         stripped = text.strip()
         if not stripped:
             raise DatasetSchemaError(path, "Text dataset must contain non-whitespace content")
@@ -257,6 +346,10 @@ class DatasetService:
         self.load_record(session, document, record_payload)
 
     def count_persisted_records(self) -> int:
-        """Return the number of records currently stored in the database."""
+        """Return the number of records currently stored in the database.
+
+        :returns: Total count of rows in the ``records`` table.
+        :rtype: int
+        """
         with self._session_factory() as session:
             return len(session.scalars(select(Record)).all())

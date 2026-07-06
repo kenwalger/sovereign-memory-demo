@@ -1,4 +1,8 @@
-"""SQLite persistence adapters for memory records and forensic receipts."""
+"""SQLite persistence adapters for memory records and forensic receipts.
+
+Re-exports database bootstrap helpers and the memory repository for
+application startup and query execution.
+"""
 
 from app.repositories.database import (
     create_engine_for_path,

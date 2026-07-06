@@ -9,7 +9,15 @@ from app.models.base import Base
 
 
 class Evidence(Base):
-    """Verified excerpt linking a record to a query lifecycle."""
+    """Verified excerpt linking a record to a query lifecycle.
+
+    :ivar str id: Primary key identifier for the evidence row.
+    :ivar str record_id: Foreign key to the parent :class:`~app.models.record.Record`.
+    :ivar str | None query_id: Optional identifier of the originating query.
+    :ivar str excerpt: Verified textual excerpt from the linked record.
+    :ivar str verified_at: ISO-8601 UTC timestamp of verification.
+    :ivar Record record: Parent memory record relationship.
+    """
 
     __tablename__ = "evidence"
 

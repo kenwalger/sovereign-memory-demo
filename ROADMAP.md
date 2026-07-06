@@ -11,8 +11,8 @@ Cross-referenced against [Technical Specification v1](project_specs/sovereign-me
 | 3    | Implement dataset loader                 | **Done**    |
 | 4    | Implement retrieval services             | **Done**    |
 | 5    | Implement receipt generation             | **Done**    |
-| 6    | Implement API routes                     | Pending     |
-| 7    | Implement React UI                       | Pending     |
+| 6    | Implement API routes                     | **Done**    |
+| 7    | Implement React UI                       | **Done**    |
 | 8    | Integrate SDK components                 | Pending     |
 
 ## Phase 1 — Project Scaffolding
@@ -22,7 +22,7 @@ Cross-referenced against [Technical Specification v1](project_specs/sovereign-me
 - [x] `uv` lockfile and environment workflow (`uv.lock`, `.python-version`)
 - [x] FastAPI entrypoint with `/api/health`
 - [x] pytest + httpx health route test stub
-- [ ] React + Vite frontend bootstrap
+- [x] React + Vite frontend bootstrap
 
 ## Phase 2 — Data Layer
 
@@ -50,12 +50,15 @@ Cross-referenced against [Technical Specification v1](project_specs/sovereign-me
 
 ## Phase 5 — Evidence Rendering
 
-- [ ] Evidence assembly in answer workflow
-- [ ] Source document viewer API
+- [x] Evidence assembly in answer workflow (`POST /api/questions`)
+- [x] Source attribution exposed in API response
+- [ ] Source document viewer API (`GET /api/sources/{id}`)
 
 ## Phase 6 — React UI
 
-- [ ] QuestionPanel, AnswerPanel, EvidencePanel, ReceiptPanel, SourceViewer
+- [x] `QuestionPanel`, `AnswerPanel`, `EvidencePanel`, `ReceiptPanel`
+- [x] `Home.tsx` quad-panel layout with loading, error, and empty states
+- [x] TypeScript API types and fetch service with TSDoc
 - [ ] Deploy to `sovereignplatform.dev/demos/memory`
 
 ## Phase 7 — SDK Integration

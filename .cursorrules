@@ -3,7 +3,9 @@
 ## Technical Invariants
 - **Project Management:** Use `uv` exclusively for all project management, virtual environment creation (`uv venv`), tool execution, and dependency locking (`uv lock`).
 - **Runtime Environment:** Explicitly target Python 3.14+ for all backend services. Utilize strict static type hinting and modern Python idioms natively.
-- **Style Enforcement:** Strictly adhere to PEP 8 standards for all Python code layouts, naming conventions, and docstring structures. 
+- **Style & Documentation Enforcement:** - Strictly adhere to PEP 8 standards for all Python code layouts and naming conventions.
+  - **Python Docstrings:** Every Python module, class, function, and method must include comprehensive **Sphinx-style docstrings** documenting parameters (`:param type name:`), return fields (`:returns:`), and raised exceptions (`:raises:`).
+  - **TypeScript Comments:** All TypeScript interfaces, service functions, and custom components must utilize structural **TSDoc/JSDoc** style block comments documenting parameters (`@param`), return schemas (`@returns`), and behavioral properties.
 - **Dependency Hierarchy:** The open-core primitives must be loaded strictly matching their PyPI registrations (`sovereign-sdk-core>=1.3.0`, `sovereign-sdk-sieve>=1.3.0`, `sovereign-sdk-ledger>=1.3.0`, and `sovereign-sdk-airlock>=1.4.0`).
 - **Data Custody:** Every query lifecycle must proceed deterministically: Ingestion Filter → Retrieval → Context Minimisation → Outbound Airlock Policy Check → Immutable Forensic Receipt Stamp.
 

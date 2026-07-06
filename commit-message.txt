@@ -1,6 +1,6 @@
-feat(receipts): add ReceiptService forensic generation and sealing
+feat(ui): add React quad-panel UI and documentation refactor
 
-Implement deterministic SHA-256 payload hashing, FR-XXXX receipt
-identity allocation, forensic seal metadata simulation for airlock/ledger
-provenance, SQLite persistence, duplicate payload_hash protection, and
-comprehensive pytest coverage for the receipt execution lifecycle.
+Bootstrap Vite + React frontend with typed API client, four institutional
+memory panels, and Home page orchestration. Add Sphinx-style backend
+docstrings and TSDoc coverage across frontend types, services, and
+components per updated .cursorrules invariants.

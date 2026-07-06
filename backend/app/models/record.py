@@ -9,7 +9,19 @@ from app.models.base import Base
 
 
 class Record(Base):
-    """Normalized semantic chunk ready for retrieval and evidence assembly."""
+    """Normalized semantic chunk ready for retrieval and evidence assembly.
+
+    :ivar str id: Primary key identifier for the memory chunk.
+    :ivar str document_id: Foreign key to the parent :class:`~app.models.document.Document`.
+    :ivar str title: Human-readable chunk title.
+    :ivar str content: Searchable textual content of the chunk.
+    :ivar str classification: Semantic category (e.g. ``accession``, ``photograph``).
+    :ivar float confidence: Confidence score in the range ``[0.0, 1.0]``.
+    :ivar str provenance_json: JSON-encoded provenance metadata.
+    :ivar str created_at: ISO-8601 UTC timestamp of record creation.
+    :ivar Document document: Parent source document relationship.
+    :ivar list[Evidence] evidence_items: Evidence rows linked to this record.
+    """
 
     __tablename__ = "records"
 

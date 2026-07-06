@@ -1,0 +1,165 @@
+.home {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin: 0 auto;
+  max-width: 1100px;
+  padding: 2rem 1.25rem 3rem;
+  width: 100%;
+}
+
+.home__hero {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.home__eyebrow {
+  color: #2f6fed;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.home__hero h1 {
+  color: #14213d;
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  margin: 0;
+}
+
+.home__lede {
+  color: #4c5d75;
+  margin: 0;
+  max-width: 60ch;
+}
+
+.home__grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr;
+}
+
+.question-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.question-form__label {
+  color: #4c5d75;
+  font-size: 0.92rem;
+}
+
+.question-form__input {
+  border: 1px solid #c7d2e3;
+  border-radius: 8px;
+  font: inherit;
+  min-height: 6rem;
+  padding: 0.85rem;
+  resize: vertical;
+}
+
+.question-form__input:focus {
+  border-color: #2f6fed;
+  outline: 2px solid rgba(47, 111, 237, 0.15);
+}
+
+.question-form__button {
+  align-self: flex-start;
+  background: #2f6fed;
+  border: none;
+  border-radius: 8px;
+  color: #ffffff;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+  padding: 0.75rem 1.1rem;
+}
+
+.question-form__button:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.evidence-block + .evidence-block {
+  margin-top: 1rem;
+}
+
+.evidence-block__title {
+  color: #1f2a44;
+  font-size: 0.92rem;
+  margin: 0 0 0.5rem;
+}
+
+.evidence-list,
+.source-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.evidence-list__chunk,
+.receipt-view__json {
+  background: #f7f9fc;
+  border: 1px solid #e1e8f2;
+  border-radius: 8px;
+  font-family: "Consolas", "Courier New", monospace;
+  font-size: 0.85rem;
+  margin: 0;
+  overflow: auto;
+  padding: 0.85rem;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.source-list__item {
+  border-top: 1px solid #e8edf5;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.75rem 0;
+}
+
+.source-list__item:first-child {
+  border-top: none;
+  padding-top: 0;
+}
+
+.receipt-view__summary {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  margin: 0 0 1rem;
+}
+
+.receipt-view__summary dt {
+  color: #6b7a90;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.2rem;
+  text-transform: uppercase;
+}
+
+.receipt-view__summary dd {
+  margin: 0;
+  word-break: break-all;
+}
+
+.receipt-view__hash {
+  font-family: "Consolas", "Courier New", monospace;
+  font-size: 0.82rem;
+}
+
+@media (min-width: 960px) {
+  .home__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .question-panel,
+  .answer-panel {
+    grid-column: 1 / -1;
+  }
+}

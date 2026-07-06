@@ -1,4 +1,8 @@
-"""Domain services for ingestion, retrieval, and receipt workflows."""
+"""Domain services for ingestion, retrieval, and receipt workflows.
+
+Re-exports service classes and typed exceptions for dataset ingestion,
+memory retrieval, and forensic receipt generation.
+"""
 
 from app.services.dataset_service import DatasetService
 from app.services.exceptions import (

@@ -9,7 +9,16 @@ from app.models.base import Base
 
 
 class Receipt(Base):
-    """Immutable forensic receipt with a unique payload hash index."""
+    """Immutable forensic receipt with a unique payload hash index.
+
+    :ivar str id: Forensic receipt identifier (e.g. ``FR-0001``).
+    :ivar str answer_id: Correlated answer identifier (e.g. ``ANS-0001``).
+    :ivar float confidence: Aggregated confidence score for the audited answer.
+    :ivar str receipt_json: JSON-encoded forensic receipt body.
+    :ivar str | None payload_hash: Deterministic SHA-256 hash of evidence strings.
+    :ivar str | None ledger_reference: Simulated ledger linkage reference.
+    :ivar str created_at: ISO-8601 UTC timestamp of receipt creation.
+    """
 
     __tablename__ = "receipts"
     __table_args__ = (

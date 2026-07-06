@@ -41,7 +41,7 @@ sovereign-memory-demo/
 | Layer    | Runtime                          |
 |----------|----------------------------------|
 | Backend  | Python **3.14+**, [uv](https://docs.astral.sh/uv/) |
-| Frontend | Node.js 20+ (Phase 6)            |
+| Frontend | Node.js 20+, npm, Vite |
 | Storage  | SQLite (local `memory_store/`)   |
 
 ## Backend Quick Start
@@ -55,11 +55,37 @@ uv run uvicorn main:app --reload --port 8000
 On startup the backend initializes the SQLite schema and ingests the
 reference dataset from `datasets/` into `memory_store/memory.db`.
 
-### API (Step 1)
+### API (Step 6)
 
-| Endpoint      | Method | Response                          |
-|---------------|--------|-----------------------------------|
-| `/api/health` | GET    | `{"status": "ok"}`                |
+| Endpoint                  | Method | Description |
+|---------------------------|--------|-------------|
+| `/api/health`             | GET    | Service health checkpoint |
+| `/api/questions`          | POST   | Question → answer → evidence → receipt |
+| `/api/receipts/{id}`      | GET    | Fetch forensic receipt by ID |
+
+#### `POST /api/questions` response keys
+
+`answer`, `evidence`, `sources`, `receipt`
+
+## Frontend Quick Start
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Open `http://localhost:5173` with the backend running on port `8000`.
+The Vite dev server proxies `/api` requests to the backend.
+
+### Panels
+
+| Component | Purpose |
+|-----------|---------|
+| `QuestionPanel` | Prompt input and query submission |
+| `AnswerPanel` | Mock natural-language answer |
+| `EvidencePanel` | Raw evidence chunks and source attribution |
+| `ReceiptPanel` | Forensic receipt JSON envelope |
 
 ### Run Tests
 

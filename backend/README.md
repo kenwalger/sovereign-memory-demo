@@ -48,12 +48,24 @@ uv run uvicorn main:app --reload --host 0.0.0.0 --port 8000
 |----------------|--------|--------------------------|
 | `/api/health`  | GET    | Service health checkpoint |
 
-### Health response
+### Questions
+
+```http
+POST /api/questions
+```
 
 ```json
 {
-  "status": "ok"
+  "question": "Who is Fido?"
 }
+```
+
+Response keys: `answer`, `evidence`, `sources`, `receipt`
+
+### Receipts
+
+```http
+GET /api/receipts/{receipt_id}
 ```
 
 ## Test
