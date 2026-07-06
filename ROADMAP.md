@@ -7,8 +7,8 @@ Cross-referenced against [Technical Specification v1](project_specs/sovereign-me
 | Step | Milestone                              | Status      |
 |------|----------------------------------------|-------------|
 | 1    | Create repository structure            | **Done**    |
-| 2    | Implement SQLite models                  | Pending     |
-| 3    | Implement dataset loader                 | Pending     |
+| 2    | Implement SQLite models                  | **Done**    |
+| 3    | Implement dataset loader                 | **Done**    |
 | 4    | Implement retrieval services             | Pending     |
 | 5    | Implement receipt generation             | Pending     |
 | 6    | Implement API routes                     | Pending     |
@@ -26,13 +26,15 @@ Cross-referenced against [Technical Specification v1](project_specs/sovereign-me
 
 ## Phase 2 — Data Layer
 
-- [ ] SQLite schema (`memory_records`, `source_documents`, `forensic_receipts`)
-- [ ] Dataset loader with fail-fast validation
-- [ ] Ship reference dataset (accession records, curator notes, property ledger, photograph catalog)
+- [x] SQLite schema (`Document`, `Record`, `Evidence`, `Receipt`)
+- [x] `Receipt.payload_hash` unique index for forensic linkage
+- [x] Dataset loader with fail-fast validation (`DatasetService`)
+- [x] Ship reference dataset (accession records, curator notes, property ledger, photograph catalog)
+- [x] Open-source governance (`LICENSE`, `CONTRIBUTING.md`, `SECURITY.md`)
+- [x] Startup ingestion via FastAPI lifespan hook
 
 ## Phase 3 — Memory & Retrieval
 
-- [ ] `MemoryRecord` implementation
 - [ ] `MemoryService` search / retrieve / get_sources
 
 ## Phase 4 — Forensic Receipts

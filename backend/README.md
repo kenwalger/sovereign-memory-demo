@@ -16,6 +16,18 @@ uv sync --group dev
 
 This creates `.venv/`, installs locked dependencies from `uv.lock`, and installs the backend package in editable mode.
 
+On startup the backend initializes the SQLite schema and ingests the
+reference dataset from `../datasets/` into `../memory_store/memory.db`.
+
+## Data Model
+
+| Entity     | Purpose                                        |
+|------------|------------------------------------------------|
+| `Document` | Source file metadata from `datasets/`          |
+| `Record`   | Extracted semantic chunk for retrieval         |
+| `Evidence` | Verified excerpt for a query lifecycle         |
+| `Receipt`  | Forensic envelope (`payload_hash` unique index)|
+
 ## Run
 
 ```bash

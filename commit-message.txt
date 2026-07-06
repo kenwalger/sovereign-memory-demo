@@ -1,6 +1,6 @@
-feat(scaffold): initialize Step 1 workspace with uv and health API
+feat(data): add schema models, governance docs, and dataset ingestion
 
-Establish Python 3.14+ backend with hatchling pyproject.toml, uv lockfile
-workflow, Sovereign SDK dependencies, FastAPI /api/health endpoint, and
-async pytest integration test. Add directory topography and tracking docs
-per technical specification v1.
+Introduce SQLAlchemy 2.0 entities (Document, Record, Evidence, Receipt)
+with payload_hash unique index, fail-fast DatasetService startup loader,
+reference datasets, MIT LICENSE/CONTRIBUTING/SECURITY scaffolding, and
+comprehensive pytest coverage for valid and malformed ingestion paths.

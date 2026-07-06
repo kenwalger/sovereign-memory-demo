@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- MIT `LICENSE`, `CONTRIBUTING.md`, and `SECURITY.md` open-source governance scaffolding
+- SQLAlchemy 2.0 relational models: `Document`, `Record`, `Evidence`, `Receipt`
+- Unique index on `Receipt.payload_hash` for forensic cryptographic linkage
+- `DatasetService` fail-fast ingestion engine with typed initialization errors
+- Startup dataset load via FastAPI lifespan hook (`datasets/` → `memory_store/`)
+- Reference demo dataset shipped under `datasets/` (accession, curator notes, ledger, photographs)
+- Unit test suite `backend/tests/test_dataset_service.py` (11 ingestion and schema tests)
 - Repository directory topography: `datasets/`, `memory_store/`, `backend/app/*`, `frontend/src/*`
 - `backend/pyproject.toml` with Python 3.14+ target, hatchling build backend, and Sovereign SDK dependencies
 - `uv` lockfile workflow (`backend/uv.lock`, `backend/.python-version`, `[dependency-groups]`)

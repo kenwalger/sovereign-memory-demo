@@ -1,0 +1,8 @@
+Miller Household Property Ledger
+1908
+
+Dog: Fido
+Breed: Mixed Terrier
+Owner: John Miller
+
+Marble Bust commissioned from local sculptor.
