@@ -51,6 +51,15 @@ async def ask_question(
     :raises HTTPException: With status 400 when airlock policy blocks the payload.
     """
     records = await memory_service.retrieve_context(payload.question)
+
+    if not records:
+        return QuestionResponse(
+            answer=_EMPTY_ANSWER,
+            evidence=[],
+            sources=[],
+            receipt=None,
+        )
+
     raw_evidence = build_evidence_strings(records)
 
     try:
@@ -64,14 +73,6 @@ async def ask_question(
                 "warnings": exc.warnings,
             },
         ) from exc
-
-    if not records:
-        return QuestionResponse(
-            answer=_EMPTY_ANSWER,
-            evidence=[],
-            sources=[],
-            receipt=None,
-        )
 
     sieved_evidence = _split_sieved_evidence(airlock_result.sieved_content)
     answer = _build_mock_answer(records)
@@ -89,14 +90,20 @@ async def ask_question(
         for attribution in attributions
     ]
     confidence = _calculate_confidence(records)
-    receipt_payload = await asyncio.to_thread(
-        _generate_or_fetch_receipt,
-        receipt_service,
-        records,
-        confidence,
-        airlock_result,
-        sieved_evidence,
-    )
+
+    try:
+        receipt_payload = await asyncio.to_thread(
+            _generate_receipt_payload,
+            receipt_service,
+            records,
+            confidence,
+            airlock_result,
+            sieved_evidence,
+        )
+    except ReceiptDuplicateError as exc:
+        receipt_payload = receipt_service.retrieve_receipt_by_payload_hash(exc.payload_hash)
+        if receipt_payload is None:
+            raise
 
     return QuestionResponse(
         answer=answer,
@@ -172,36 +179,28 @@ def _calculate_confidence(records: list[Record]) -> float:
     return round(sum(record.confidence for record in records) / len(records), 2)
 
 
-def _generate_or_fetch_receipt(
+def _generate_receipt_payload(
     receipt_service: ReceiptService,
     records: list[Record],
     confidence: float,
     airlock_result: AirlockResult,
     sieved_evidence: list[str],
 ) -> dict[str, Any]:
-    """Generate a receipt or return an existing receipt for identical evidence.
+    """Generate and parse a forensic receipt payload on a worker thread.
 
-    :param ReceiptService receipt_service: Service used to create or fetch receipts.
+    :param ReceiptService receipt_service: Service used to create receipts.
     :param list[Record] records: Evidence records backing the answer.
     :param float confidence: Aggregated confidence score for the receipt.
     :param AirlockResult airlock_result: Successful airlock processing result for SDK metadata.
     :param list[str] sieved_evidence: Minimized evidence strings for persistence.
     :returns: Parsed forensic receipt JSON body.
     :rtype: dict[str, Any]
-    :raises ReceiptDuplicateError: If a duplicate hash is detected but the
-        existing receipt cannot be retrieved.
+    :raises ReceiptDuplicateError: If a receipt with the same payload hash already exists.
     """
-    try:
-        receipt = receipt_service.generate_forensic_receipt(
-            records,
-            confidence,
-            airlock_result=airlock_result,
-            sieved_evidence=sieved_evidence,
-        )
-    except ReceiptDuplicateError as exc:
-        existing = receipt_service.retrieve_receipt_by_payload_hash(exc.payload_hash)
-        if existing is None:
-            raise
-        return existing
-
+    receipt = receipt_service.generate_forensic_receipt(
+        records,
+        confidence,
+        airlock_result=airlock_result,
+        sieved_evidence=sieved_evidence,
+    )
     return json.loads(receipt.receipt_json)

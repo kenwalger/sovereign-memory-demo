@@ -101,3 +101,11 @@ Cross-referenced against [Technical Specification v1](project_specs/sovereign-me
 - [x] Removed unused `Evidence` ORM model and dangling `Record` relationship
 - [x] Removed dead `session_scope` repository utility
 - [x] Production-ready `CORSMiddleware` with local and showcase origins
+
+## Phase 9 — Robustness & Recall
+
+- [x] Empty-retrieval guard runs before outbound airlock processing
+- [x] Route-level `ReceiptDuplicateError` fallback to `retrieve_receipt_by_payload_hash`
+- [x] Core dependency version floors (`fastapi`, `sqlalchemy`, `uvicorn`)
+- [x] Keyword-density search recall with repository stop-word filtering
+- [x] Idempotent dataset ingestion skips reload when documents exist

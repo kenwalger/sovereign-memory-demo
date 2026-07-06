@@ -55,6 +55,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Frontend `"[object Object]"` fallback when policy violation errors return structured `detail` objects
 - Receipt retrieval `DetachedInstanceError` on `GET /api/receipts/{id}` by materializing JSON inside the session boundary
 - Duplicate-hash receipt fallback now receives a parsed receipt body instead of a detached ORM instance
+- Question lifecycle 500s from unhandled duplicate receipts and unnecessary airlock passes on empty retrieval
+- Complex query recall failures from strict AND keyword matching across long questions
 
 ### Changed
 
@@ -69,3 +71,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `ReceiptMetadata` refactored to a TypeScript union (`SimulatedSealMetadata | SdkReceiptMetadata`)
 - Removed unused `Evidence` ORM model, `Record.evidence_items` relationship, and dead `session_scope` utility
 - `CORSMiddleware` mounted with local development and showcase origins
+- `POST /api/questions` skips airlock when retrieval returns no records
+- `ReceiptDuplicateError` handled at the route layer with existing receipt fallback
+- `MemoryRepository.search_records` ranks by keyword density instead of strict AND matching
+- `DatasetService.load_dataset` skips ingestion when documents already exist
+- Pinned `fastapi>=0.110.0`, `sqlalchemy>=2.0.0`, and `uvicorn>=0.30.0` dependency floors

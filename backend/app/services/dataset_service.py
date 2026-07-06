@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Any
 
 from pydantic import ValidationError
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session, sessionmaker
 
 from app.models import (
@@ -65,9 +65,12 @@ class DatasetService:
         self._session_factory = session_factory
 
     async def load_dataset(self) -> list[Document]:
-        """Parse all required dataset assets and persist them to the database.
+        """Parse required dataset assets and persist them when the store is empty.
 
-        :returns: Persisted source document rows for each required dataset file.
+        Skips ingestion when documents already exist to keep startup idempotent
+        and avoid duplicate receipt races across restarts.
+
+        :returns: Persisted or existing source document rows for each dataset file.
         :rtype: list[Document]
         :raises DatasetFileNotFoundError: If any required dataset file is missing.
         :raises DatasetEncodingError: If a dataset file cannot be decoded as UTF-8.
@@ -76,12 +79,34 @@ class DatasetService:
         """
         self._ensure_required_files()
 
+        if self._database_has_documents():
+            return self._load_existing_documents()
+
         documents: list[Document] = []
         for filename in REQUIRED_DATASET_FILES:
             document = await self._ingest_file(filename)
             documents.append(document)
 
         return documents
+
+    def _database_has_documents(self) -> bool:
+        """Return whether the memory store already contains ingested documents.
+
+        :returns: ``True`` when one or more document rows exist, else ``False``.
+        :rtype: bool
+        """
+        with self._session_factory() as session:
+            document_count = session.scalar(select(func.count()).select_from(Document)) or 0
+            return document_count > 0
+
+    def _load_existing_documents(self) -> list[Document]:
+        """Load persisted source documents without re-ingesting dataset files.
+
+        :returns: All document rows currently stored in the database.
+        :rtype: list[Document]
+        """
+        with self._session_factory() as session:
+            return list(session.scalars(select(Document)).all())
 
     def load_record(
         self,

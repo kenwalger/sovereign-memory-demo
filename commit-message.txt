@@ -1,5 +1,5 @@
-refactor(quality): align receipt metadata types and add CORS
+fix(api): harden question lifecycle routing and search recall
 
-Model ReceiptMetadata as a TypeScript union for simulated vs SDK payloads,
-remove unused Evidence ORM scaffolding and session_scope helper, and mount
-CORSMiddleware for local and showcase cross-origin browser access.
+Skip airlock on empty retrieval, catch duplicate receipts at the route layer,
+rank search results by keyword density, make dataset ingestion idempotent, and
+pin core FastAPI/SQLAlchemy/Uvicorn dependency floors.

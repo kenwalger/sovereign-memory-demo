@@ -181,12 +181,12 @@ def test_receipt_payload_hash_has_unique_index(memory_store_path: Path) -> None:
 
 
 @pytest.mark.asyncio
-async def test_reload_replaces_existing_documents(
+async def test_reload_skips_reingestion_when_documents_exist(
     tmp_path: Path,
     session_factory,
     count_documents,
 ) -> None:
-    """Re-ingestion replaces prior document rows without duplication."""
+    """Subsequent startup loads skip ingestion when documents already exist."""
     datasets_path = tmp_path / "datasets"
     write_valid_dataset(datasets_path)
     service = DatasetService(datasets_path, session_factory)
