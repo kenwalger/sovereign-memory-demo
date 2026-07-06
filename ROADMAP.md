@@ -10,7 +10,7 @@ Cross-referenced against [Technical Specification v1](project_specs/sovereign-me
 | 2    | Implement SQLite models                  | **Done**    |
 | 3    | Implement dataset loader                 | **Done**    |
 | 4    | Implement retrieval services             | **Done**    |
-| 5    | Implement receipt generation             | Pending     |
+| 5    | Implement receipt generation             | **Done**    |
 | 6    | Implement API routes                     | Pending     |
 | 7    | Implement React UI                       | Pending     |
 | 8    | Integrate SDK components                 | Pending     |
@@ -42,8 +42,11 @@ Cross-referenced against [Technical Specification v1](project_specs/sovereign-me
 
 ## Phase 4 — Forensic Receipts
 
-- [ ] `ReceiptService` generate / store / retrieve
-- [ ] Ledger linkage via `sovereign-sdk-ledger`
+- [x] `ReceiptService.generate_forensic_receipt` with SHA-256 payload hashing
+- [x] Forensic seal metadata simulation (`app/receipts/seal.py`)
+- [x] Unique `payload_hash` duplicate protection
+- [x] Receipt unit tests (`test_receipt_service.py`)
+- [ ] Full `sovereign-sdk-ledger` integration (Phase 7)
 
 ## Phase 5 — Evidence Rendering
 

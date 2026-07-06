@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- `ReceiptService.generate_forensic_receipt` with deterministic SHA-256 payload hashing
+- Forensic seal simulation (`app/receipts/seal.py`) mapping pre-sieve hash into signed metadata
+- `ReceiptDuplicateError` guard against unique `payload_hash` index violations
+- Unit test suite `backend/tests/test_receipt_service.py` (7 receipt lifecycle tests)
 - `MemoryRepository` with keyword search and document lookup (`search_records`, `get_document_by_id`)
 - `MemoryService` async retrieval orchestration (`retrieve_context`, `assemble_source_attribution`)
 - `SourceAttribution` provenance dataclass mapping records to parent documents

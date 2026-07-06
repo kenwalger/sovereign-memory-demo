@@ -7,8 +7,12 @@ from app.services.exceptions import (
     DatasetInitializationError,
     DatasetSchemaError,
     DatasetValidationError,
+    ReceiptDuplicateError,
+    ReceiptServiceError,
+    ReceiptValidationError,
 )
 from app.services.memory_service import MemoryService, SourceAttribution
+from app.services.receipt_service import ReceiptService
 
 __all__ = [
     "DatasetEncodingError",
@@ -18,5 +22,9 @@ __all__ = [
     "DatasetService",
     "DatasetValidationError",
     "MemoryService",
+    "ReceiptDuplicateError",
+    "ReceiptService",
+    "ReceiptServiceError",
+    "ReceiptValidationError",
     "SourceAttribution",
 ]

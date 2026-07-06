@@ -34,6 +34,7 @@ reference dataset from `../datasets/` into `../memory_store/memory.db`.
 |--------------------|-------------------------------------|
 | `MemoryRepository` | `search_records`, `get_document_by_id` |
 | `MemoryService`    | `retrieve_context`, `assemble_source_attribution` |
+| `ReceiptService`   | `generate_forensic_receipt` |
 
 ## Run
 

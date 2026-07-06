@@ -1,6 +1,6 @@
-feat(retrieval): add MemoryRepository and MemoryService query layer
+feat(receipts): add ReceiptService forensic generation and sealing
 
-Implement SQLAlchemy keyword search across ingested Record chunks,
-async retrieve_context with stop-word sanitization, source attribution
-mapping to parent Documents, and comprehensive pytest coverage for
-matched, empty, and unmatched query bounds.
+Implement deterministic SHA-256 payload hashing, FR-XXXX receipt
+identity allocation, forensic seal metadata simulation for airlock/ledger
+provenance, SQLite persistence, duplicate payload_hash protection, and
+comprehensive pytest coverage for the receipt execution lifecycle.

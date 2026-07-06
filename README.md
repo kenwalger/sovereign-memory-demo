@@ -85,6 +85,7 @@ uv run pytest
 | `MemoryRepository` | `get_document_by_id(doc_id)` | Upstream source document lookup |
 | `MemoryService` | `retrieve_context(question)` | Async sanitized query orchestration |
 | `MemoryService` | `assemble_source_attribution(records)` | Record → Document provenance mapping |
+| `ReceiptService` | `generate_forensic_receipt(records, confidence)` | SHA-256 sealed receipt persistence |
 
 ## Reference Dataset
 
