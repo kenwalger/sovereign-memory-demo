@@ -124,3 +124,8 @@ Cross-referenced against [Technical Specification v1](project_specs/sovereign-me
 - [x] Shared `content_filters` strips author footers at ingestion and retrieval
 - [x] Tracked key material purged from Git index
 - [x] Cross-platform `SOVEREIGN_NODE_SECRET` local setup documented in README files
+
+## Final Execution Guard
+
+- [x] Dataset ingestion lifecycle offloaded via `asyncio.to_thread` at startup
+- [x] `CORSMiddleware` restricted to explicit methods and headers with credentials

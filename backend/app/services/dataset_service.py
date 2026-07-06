@@ -12,7 +12,7 @@ from pydantic import ValidationError
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session, sessionmaker
 
-from app.content_filters import AUTHOR_SIGNATURE_TERMS, strip_author_footers
+from app.content_filters import strip_author_footers
 from app.models import (
     AccessionRecordSchema,
     Document,
@@ -68,8 +68,23 @@ class DatasetService:
     async def load_dataset(self) -> list[Document]:
         """Parse required dataset assets and persist them when the store is empty.
 
-        Skips ingestion when documents already exist to keep startup idempotent
-        and avoid duplicate receipt races across restarts.
+        The blocking ingestion lifecycle is offloaded to a worker thread so file
+        reads and SQLite writes do not block the FastAPI event loop.
+
+        :returns: Persisted or existing source document rows for each dataset file.
+        :rtype: list[Document]
+        :raises DatasetFileNotFoundError: If any required dataset file is missing.
+        :raises DatasetEncodingError: If a dataset file cannot be decoded as UTF-8.
+        :raises DatasetSchemaError: If a dataset file violates its expected schema.
+        :raises DatasetValidationError: If a JSON row fails Pydantic validation.
+        """
+        return await asyncio.to_thread(self.initialize_datasets)
+
+    def initialize_datasets(self) -> list[Document]:
+        """Run the dataset ingestion lifecycle synchronously on a worker thread.
+
+        Checks for existing documents, then reads, validates, and persists each
+        required dataset file when the memory store is empty.
 
         :returns: Persisted or existing source document rows for each dataset file.
         :rtype: list[Document]
@@ -83,12 +98,7 @@ class DatasetService:
         if self._database_has_documents():
             return self._load_existing_documents()
 
-        documents: list[Document] = []
-        for filename in REQUIRED_DATASET_FILES:
-            document = await self._ingest_file(filename)
-            documents.append(document)
-
-        return documents
+        return [self._ingest_file_sync(filename) for filename in REQUIRED_DATASET_FILES]
 
     def _database_has_documents(self) -> bool:
         """Return whether the memory store already contains ingested documents.
@@ -178,10 +188,8 @@ class DatasetService:
             if not path.is_file():
                 raise DatasetFileNotFoundError(path)
 
-    async def _ingest_file(self, filename: str) -> Document:
-        """Read, validate, and persist a single dataset file.
-
-        File I/O is offloaded to a worker thread to avoid blocking the event loop.
+    def _ingest_file_sync(self, filename: str) -> Document:
+        """Read, validate, and persist a single dataset file synchronously.
 
         :param str filename: Name of the dataset file within ``datasets_path``.
         :returns: Persisted source document row with associated records.
@@ -191,7 +199,7 @@ class DatasetService:
         :raises DatasetValidationError: If JSON rows fail schema validation.
         """
         path = self._datasets_path / filename
-        raw_bytes = await asyncio.to_thread(path.read_bytes)
+        raw_bytes = path.read_bytes()
         text = strip_author_footers(self._decode_utf8(path, raw_bytes))
         suffix = path.suffix.lower()
         document_type = DOCUMENT_TYPE_BY_SUFFIX.get(suffix)

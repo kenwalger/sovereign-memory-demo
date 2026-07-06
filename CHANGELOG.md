@@ -89,3 +89,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Receipt lookup and duplicate-hash fallback queries offloaded via `asyncio.to_thread`
 - `DatasetService.count_persisted_records` uses native SQL `COUNT(*)` aggregation
 - Frontend `formatErrorDetail` consolidates structured policy error unpacking
+- `DatasetService.initialize_datasets` offloads blocking ingestion via `asyncio.to_thread`
+- `CORSMiddleware` uses explicit `GET`/`POST`/`OPTIONS` methods and `Content-Type`/`Authorization` headers

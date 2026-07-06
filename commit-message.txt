@@ -1,4 +1,5 @@
-docs(setup): document SOVEREIGN_NODE_SECRET for Windows and Unix
+fix(startup): offload dataset ingestion and tighten CORS policy
 
-Add explicit fail-fast environment variable instructions with PowerShell,
-export, and inline shell examples to README.md and backend/README.md.
+Run initialize_datasets on a worker thread during lifespan bootstrap and
+restrict CORSMiddleware to explicit methods and headers while preserving
+local showcase origin mappings.

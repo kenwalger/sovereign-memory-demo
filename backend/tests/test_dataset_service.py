@@ -146,17 +146,17 @@ async def test_empty_text_file_raises_schema_error(
 
 
 @pytest.mark.asyncio
-async def test_file_reads_offload_to_worker_thread(
+async def test_dataset_ingestion_offloads_blocking_work_to_worker_thread(
     datasets_path: Path,
     session_factory,
 ) -> None:
-    """Disk-bound reads are executed via asyncio.to_thread."""
+    """Dataset ingestion runs blocking file and database work via asyncio.to_thread."""
     service = DatasetService(datasets_path, session_factory)
 
     with patch("asyncio.to_thread", wraps=asyncio.to_thread) as mock_thread:
         await service.load_dataset()
 
-    assert mock_thread.call_count == 4
+    mock_thread.assert_called_once_with(service.initialize_datasets)
 
 
 def test_schema_creates_relational_tables(memory_store_path: Path) -> None:

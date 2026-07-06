@@ -4,6 +4,7 @@ Exposes the ASGI application, startup lifecycle hooks that initialize the
 memory store and ingest datasets, and a lightweight health-check endpoint.
 """
 
+import asyncio
 import os
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
@@ -11,6 +12,8 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from sovereign_ledger import SovereignLedger
+from sqlalchemy.engine import Engine
+from sqlalchemy.orm import Session, sessionmaker
 
 from app.api import router
 from app.config import (
@@ -49,6 +52,20 @@ def _require_sovereign_node_secret() -> None:
         raise RuntimeError(_MISSING_SOVEREIGN_NODE_SECRET_MESSAGE)
 
 
+def _bootstrap_memory_store() -> tuple[Engine, sessionmaker[Session]]:
+    """Initialize the SQLite schema and ingest datasets on a worker thread.
+
+    :returns: Configured SQLAlchemy engine and session factory.
+    :rtype: tuple[Engine, sessionmaker[Session]]
+    """
+    engine = create_engine_for_path(MEMORY_STORE_PATH)
+    init_schema(engine)
+    session_factory = create_session_factory(engine)
+    dataset_service = DatasetService(DATASETS_PATH, session_factory)
+    dataset_service.initialize_datasets()
+    return engine, session_factory
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     """Initialize the schema and ingest datasets at application startup.
@@ -64,11 +81,7 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     """
     _require_sovereign_node_secret()
 
-    engine = create_engine_for_path(MEMORY_STORE_PATH)
-    init_schema(engine)
-    session_factory = create_session_factory(engine)
-    dataset_service = DatasetService(DATASETS_PATH, session_factory)
-    await dataset_service.load_dataset()
+    engine, session_factory = await asyncio.to_thread(_bootstrap_memory_store)
 
     memory_repository = MemoryRepository(session_factory)
     SOVEREIGN_LEDGER_PATH.parent.mkdir(parents=True, exist_ok=True)
@@ -113,8 +126,8 @@ app.add_middleware(
         "https://sovereignplatform.dev",
     ],
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["Content-Type", "Authorization"],
 )
 
 app.include_router(router)
