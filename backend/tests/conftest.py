@@ -13,6 +13,12 @@ from app.models import Document, Record
 from app.repositories.database import create_engine_for_path, create_session_factory, init_schema
 from app.services.dataset_service import DatasetService
 
+
+@pytest.fixture(autouse=True)
+def _sovereign_node_secret_for_tests(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Provide a test-only sovereign node secret for SDK initialization."""
+    monkeypatch.setenv("SOVEREIGN_NODE_SECRET", "pytest-sovereign-node-secret")
+
 VALID_ACCESSION_RECORDS = """[
   {
     "accession_number": "2024.001",

@@ -6,6 +6,7 @@ import asyncio
 import re
 from dataclasses import dataclass
 
+from app.content_filters import AUTHOR_SIGNATURE_TERMS, strip_author_footers
 from app.models import Document, Record
 from app.repositories.memory_repository import MemoryRepository
 
@@ -16,16 +17,8 @@ _METADATA_LINE_PATTERN = re.compile(
     r"^\s*(?:copyright|author|signed by|curated by|metadata)\b.*$",
     re.IGNORECASE | re.MULTILINE,
 )
-_METADATA_SIGNATURE_TERMS = frozenset({
-    "alger",
-    "author",
-    "copyright",
-    "ken",
-    "kenal",
+_METADATA_SIGNATURE_TERMS = AUTHOR_SIGNATURE_TERMS | frozenset({
     "metadata",
-    "profile",
-    "signed",
-    "system",
 })
 _STOP_WORDS = frozenset({
     "a",
@@ -188,7 +181,8 @@ class MemoryService:
         :returns: Space-joined search terms suitable for repository lookup.
         :rtype: str
         """
-        without_metadata_lines = _METADATA_LINE_PATTERN.sub(" ", question)
+        without_metadata_lines = strip_author_footers(question)
+        without_metadata_lines = _METADATA_LINE_PATTERN.sub(" ", without_metadata_lines)
         normalized = _SANITIZE_PATTERN.sub(" ", without_metadata_lines)
         terms = [
             term

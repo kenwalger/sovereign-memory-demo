@@ -31,21 +31,22 @@ from app.services.dataset_service import DatasetService
 from app.services.memory_service import MemoryService
 from app.services.receipt_service import ReceiptService
 
-DEFAULT_SOVEREIGN_NODE_SECRET = "demo-local-sovereign-node-secret-key-2026"
-"""str: Local demo fallback for ``SOVEREIGN_NODE_SECRET`` when unset in the host environment."""
+_MISSING_SOVEREIGN_NODE_SECRET_MESSAGE = (
+    "SOVEREIGN_NODE_SECRET is missing. Please declare this variable in your "
+    "execution environment before launching."
+)
+"""str: Fail-fast startup message when the sovereign node secret is unset."""
 
 
-def _ensure_sovereign_node_secret() -> None:
-    """Seed ``SOVEREIGN_NODE_SECRET`` for local SDK cryptographic initialization.
-
-    Silences sovereign-sdk startup warnings when the host environment does not
-    provide a node secret. Production deployments should set the variable explicitly.
+def _require_sovereign_node_secret() -> None:
+    """Fail fast when ``SOVEREIGN_NODE_SECRET`` is absent from the environment.
 
     :returns: None
     :rtype: None
+    :raises RuntimeError: If ``SOVEREIGN_NODE_SECRET`` is not configured.
     """
     if not os.environ.get("SOVEREIGN_NODE_SECRET"):
-        os.environ["SOVEREIGN_NODE_SECRET"] = DEFAULT_SOVEREIGN_NODE_SECRET
+        raise RuntimeError(_MISSING_SOVEREIGN_NODE_SECRET_MESSAGE)
 
 
 @asynccontextmanager
@@ -61,7 +62,7 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     :yields: None
     :rtype: None
     """
-    _ensure_sovereign_node_secret()
+    _require_sovereign_node_secret()
 
     engine = create_engine_for_path(MEMORY_STORE_PATH)
     init_schema(engine)

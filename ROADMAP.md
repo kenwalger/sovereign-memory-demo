@@ -116,4 +116,11 @@ Cross-referenced against [Technical Specification v1](project_specs/sovereign-me
 - [x] All receipt lookup I/O offloaded via `asyncio.to_thread` in API routes
 - [x] `count_persisted_records` uses SQL `COUNT(*)` aggregation
 - [x] Frontend `formatErrorDetail` unreachable branch cleanup
-- [x] `SOVEREIGN_NODE_SECRET` local demo fallback preserved in lifespan startup
+
+## Emergency Security Hardening
+
+- [x] Global `.gitignore` blocks for `**/.sovereign_keys/` and `*.pem`
+- [x] Fail-fast `SOVEREIGN_NODE_SECRET` startup (no hardcoded secret fallback)
+- [x] Shared `content_filters` strips author footers at ingestion and retrieval
+- [x] Tracked key material purged from Git index
+- [x] Cross-platform `SOVEREIGN_NODE_SECRET` local setup documented in README files

@@ -1,5 +1,4 @@
-feat(api): add context-aware answers and complete I/O offloading
+docs(setup): document SOVEREIGN_NODE_SECRET for Windows and Unix
 
-Serve property-transaction mock summaries from question keywords, thread-offload
-all receipt database reads, optimize record count aggregation, and simplify
-frontend structured error unpacking while preserving SOVEREIGN_NODE_SECRET defaults.
+Add explicit fail-fast environment variable instructions with PowerShell,
+export, and inline shell examples to README.md and backend/README.md.

@@ -57,6 +57,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Duplicate-hash receipt fallback now receives a parsed receipt body instead of a detached ORM instance
 - Question lifecycle 500s from unhandled duplicate receipts and unnecessary airlock passes on empty retrieval
 - Complex query recall failures from strict AND keyword matching across long questions
+- Tracked `.sovereign_keys` identity material removed from Git index; cryptographic paths now gitignored
+
+### Security
+
+- Removed hardcoded `SOVEREIGN_NODE_SECRET` fallback; startup now fails fast when unset
+- Added global `.gitignore` rules for `**/.sovereign_keys/` and `*.pem`
+- Shared `content_filters` strips creator attribution from ingestion and search token maps
+- Documented cross-platform `SOVEREIGN_NODE_SECRET` setup for Windows PowerShell and Unix shells
 
 ### Changed
 
@@ -76,7 +84,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `MemoryRepository.search_records` ranks by keyword density instead of strict AND matching
 - `DatasetService.load_dataset` skips ingestion when documents already exist
 - Pinned `fastapi>=0.110.0`, `sqlalchemy>=2.0.0`, and `uvicorn>=0.30.0` dependency floors
-- Local demo fallback seeds `SOVEREIGN_NODE_SECRET` during application lifespan startup
 - `MemoryService` filters author signature and metadata profile tokens from search queries
 - Context-aware mock answers for real estate and transaction demo queries
 - Receipt lookup and duplicate-hash fallback queries offloaded via `asyncio.to_thread`

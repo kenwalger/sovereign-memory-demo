@@ -5,6 +5,7 @@ from __future__ import annotations
 from sqlalchemy import func, or_, select
 from sqlalchemy.orm import Session, joinedload, sessionmaker
 
+from app.content_filters import AUTHOR_SIGNATURE_TERMS
 from app.models import Document, Record
 
 _SEARCH_STOP_WORDS = frozenset({
@@ -20,7 +21,7 @@ _SEARCH_STOP_WORDS = frozenset({
     "transactions",
     "with",
     "your",
-})
+}) | AUTHOR_SIGNATURE_TERMS
 
 
 def _escape_like_term(term: str) -> str:

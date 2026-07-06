@@ -46,14 +46,50 @@ sovereign-memory-demo/
 
 ## Backend Quick Start
 
+### Local setup
+
+Install dependencies from the backend package root:
+
 ```bash
 cd backend
 uv sync --group dev
+```
+
+### Required environment variable
+
+`SOVEREIGN_NODE_SECRET` is **required** for local cryptographic ledger operations.
+The backend enforces a fail-fast startup invariant: if this variable is absent,
+the server raises a `RuntimeError` and refuses to launch. No default secret is
+injected by the application.
+
+Declare the variable in your shell **before** starting Uvicorn.
+
+**Windows PowerShell**
+
+```powershell
+cd backend
+$env:SOVEREIGN_NODE_SECRET="your-secret-key"
 uv run uvicorn main:app --reload --port 8000
+```
+
+**Linux / macOS (bash, zsh)**
+
+```bash
+cd backend
+export SOVEREIGN_NODE_SECRET="your-secret-key"
+uv run uvicorn main:app --reload --port 8000
+```
+
+**Linux / macOS (inline, single command)**
+
+```bash
+cd backend
+SOVEREIGN_NODE_SECRET="your-secret-key" uv run uvicorn main:app --reload --port 8000
 ```
 
 On startup the backend initializes the SQLite schema and ingests the
 reference dataset from `datasets/` into `memory_store/memory.db`.
+Cryptographic identity keys under `memory_store/.sovereign_keys/` are gitignored and must never be committed.
 
 ### API (Step 6)
 

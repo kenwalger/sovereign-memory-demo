@@ -12,6 +12,7 @@ from pydantic import ValidationError
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session, sessionmaker
 
+from app.content_filters import AUTHOR_SIGNATURE_TERMS, strip_author_footers
 from app.models import (
     AccessionRecordSchema,
     Document,
@@ -191,7 +192,7 @@ class DatasetService:
         """
         path = self._datasets_path / filename
         raw_bytes = await asyncio.to_thread(path.read_bytes)
-        text = self._decode_utf8(path, raw_bytes)
+        text = strip_author_footers(self._decode_utf8(path, raw_bytes))
         suffix = path.suffix.lower()
         document_type = DOCUMENT_TYPE_BY_SUFFIX.get(suffix)
         if document_type is None:

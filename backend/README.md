@@ -19,6 +19,42 @@ This creates `.venv/`, installs locked dependencies from `uv.lock`, and installs
 On startup the backend initializes the SQLite schema and ingests the
 reference dataset from `../datasets/` into `../memory_store/memory.db`.
 
+## Running the application
+
+### Required environment variable
+
+`SOVEREIGN_NODE_SECRET` is **required** for local cryptographic ledger operations.
+The application fails fast at lifespan startup when this variable is missing:
+
+```text
+RuntimeError: SOVEREIGN_NODE_SECRET is missing. Please declare this variable in your execution environment before launching.
+```
+
+Set the variable in your shell before running Uvicorn or pytest against a live SDK stack.
+
+**Windows PowerShell**
+
+```powershell
+$env:SOVEREIGN_NODE_SECRET="your-secret-key"
+uv run uvicorn main:app --reload --host 0.0.0.0 --port 8000
+```
+
+**Linux / macOS**
+
+```bash
+export SOVEREIGN_NODE_SECRET="your-secret-key"
+uv run uvicorn main:app --reload --host 0.0.0.0 --port 8000
+```
+
+**Linux / macOS (inline)**
+
+```bash
+SOVEREIGN_NODE_SECRET="your-secret-key" uv run uvicorn main:app --reload --host 0.0.0.0 --port 8000
+```
+
+Identity key material is written to `../memory_store/.sovereign_keys/` at runtime.
+That directory and all `*.pem` files are gitignored and must never be committed.
+
 ## Data Model
 
 | Entity     | Purpose                                        |
@@ -51,10 +87,14 @@ A single `SovereignLedger` handle is shared between `AirlockBoundary` and `Recei
 
 Cross-origin browser requests are supported via `CORSMiddleware` (localhost Vite dev server and `sovereignplatform.dev`).
 
-## Run
+## Test
+
+`SOVEREIGN_NODE_SECRET` is injected automatically by the pytest suite. For ad-hoc
+local commands, export the variable using the shell examples in
+[Running the application](#running-the-application) above.
 
 ```bash
-uv run uvicorn main:app --reload --host 0.0.0.0 --port 8000
+uv run pytest
 ```
 
 ## API
@@ -81,12 +121,6 @@ Response keys: `answer`, `evidence`, `sources`, `receipt`
 
 ```http
 GET /api/receipts/{receipt_id}
-```
-
-## Test
-
-```bash
-uv run pytest
 ```
 
 ## Dependency management
