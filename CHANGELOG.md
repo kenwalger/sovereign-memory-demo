@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Sovereign SDK integration: `OutboundContextProcessor` wires sieve + airlock into `POST /api/questions`
+- `backend/config/airlock_policy.yaml` deny rules for API keys and private key material
+- `ReceiptService` ledger commits via `sovereign-sdk-ledger` with SDK telemetry metadata
+- Policy-blocked responses return HTTP 400 with `{ error, message, warnings }` envelope
+- Integration test for airlock policy rejection (`test_post_questions_policy_violation_returns_structured_400`)
 - React + Vite frontend with quad-panel UI (`QuestionPanel`, `AnswerPanel`, `EvidencePanel`, `ReceiptPanel`)
 - TypeScript API contracts and `frontend/src/services/api.ts` fetch client with TSDoc
 - Comprehensive Sphinx-style docstrings across backend modules per `.cursorrules`
@@ -16,7 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - FastAPI API router with `POST /api/questions` and `GET /api/receipts/{receipt_id}`
 - Unified question response contract: `answer`, `evidence`, `sources`, `receipt`
 - `ReceiptService.retrieve_receipt` and `retrieve_receipt_by_payload_hash` lookup methods
-- Integration test suite `backend/tests/test_api_routes.py` (5 HTTP lifecycle tests)
+- Integration test suite `backend/tests/test_api_routes.py` (6 HTTP lifecycle tests)
 - `ReceiptService.generate_forensic_receipt` with deterministic SHA-256 payload hashing
 - Forensic seal simulation (`app/receipts/seal.py`) mapping pre-sieve hash into signed metadata
 - `ReceiptDuplicateError` guard against unique `payload_hash` index violations

@@ -8,6 +8,7 @@ import pytest
 from sqlalchemy import select
 from sqlalchemy.orm import Session, sessionmaker
 
+from app.config import AIRLOCK_POLICY_PATH
 from app.models import Document, Record
 from app.repositories.database import create_engine_for_path, create_session_factory, init_schema
 from app.services.dataset_service import DatasetService
@@ -83,6 +84,26 @@ def datasets_path(tmp_path: Path) -> Path:
     path = tmp_path / "datasets"
     write_valid_dataset(path)
     return path
+
+
+@pytest.fixture
+def sovereign_keys_path(tmp_path: Path) -> Path:
+    """Provide an isolated directory for Ed25519 signing key material."""
+    path = tmp_path / ".sovereign_keys"
+    path.mkdir()
+    return path
+
+
+@pytest.fixture
+def sovereign_ledger_path(tmp_path: Path) -> Path:
+    """Provide an isolated SQLite path for the append-only sovereign ledger."""
+    return tmp_path / "sovereign_audit.db"
+
+
+@pytest.fixture
+def airlock_policy_path() -> Path:
+    """Return the repository airlock policy used by integration tests."""
+    return AIRLOCK_POLICY_PATH
 
 
 @pytest.fixture

@@ -36,6 +36,16 @@ reference dataset from `../datasets/` into `../memory_store/memory.db`.
 | `MemoryService`    | `retrieve_context`, `assemble_source_attribution` |
 | `ReceiptService`   | `generate_forensic_receipt` |
 
+## SDK Integration
+
+| Component | Package | Role |
+|-----------|---------|------|
+| `OutboundContextProcessor` | `sovereign-sdk-airlock` | Sieve + outbound policy on unified context |
+| `SovereignLedger` | `sovereign-sdk-ledger` | Append-only forensic receipt commits |
+| `airlock_policy.yaml` | `backend/config/` | Deny rules for API keys and private key material |
+
+Policy violations on `POST /api/questions` return HTTP `400` with `{ error, message, warnings }`.
+
 ## Run
 
 ```bash

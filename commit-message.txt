@@ -1,6 +1,5 @@
-feat(ui): add React quad-panel UI and documentation refactor
+feat(sdk): integrate sieve, airlock, and ledger into question lifecycle
 
-Bootstrap Vite + React frontend with typed API client, four institutional
-memory panels, and Home page orchestration. Add Sphinx-style backend
-docstrings and TSDoc coverage across frontend types, services, and
-components per updated .cursorrules invariants.
+Wire sovereign-sdk-sieve and sovereign-sdk-airlock into POST /api/questions
+via OutboundContextProcessor, commit forensic receipts through
+sovereign-sdk-ledger, and return structured HTTP 400 on policy violations.

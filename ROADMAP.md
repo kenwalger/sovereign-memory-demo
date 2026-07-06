@@ -13,7 +13,7 @@ Cross-referenced against [Technical Specification v1](project_specs/sovereign-me
 | 5    | Implement receipt generation             | **Done**    |
 | 6    | Implement API routes                     | **Done**    |
 | 7    | Implement React UI                       | **Done**    |
-| 8    | Integrate SDK components                 | Pending     |
+| 8    | Integrate SDK components                 | **Done**    |
 
 ## Phase 1 — Project Scaffolding
 
@@ -46,7 +46,7 @@ Cross-referenced against [Technical Specification v1](project_specs/sovereign-me
 - [x] Forensic seal metadata simulation (`app/receipts/seal.py`)
 - [x] Unique `payload_hash` duplicate protection
 - [x] Receipt unit tests (`test_receipt_service.py`)
-- [ ] Full `sovereign-sdk-ledger` integration (Phase 7)
+- [x] Full `sovereign-sdk-ledger` integration (Phase 7)
 
 ## Phase 5 — Evidence Rendering
 
@@ -63,9 +63,9 @@ Cross-referenced against [Technical Specification v1](project_specs/sovereign-me
 
 ## Phase 7 — SDK Integration
 
-- [ ] `sovereign-sdk-sieve` context minimisation
-- [ ] `sovereign-sdk-airlock` outbound policy check
-- [ ] Full query lifecycle: Ingestion → Retrieval → Minimisation → Airlock → Receipt
+- [x] `sovereign-sdk-sieve` context minimisation
+- [x] `sovereign-sdk-airlock` outbound policy check
+- [x] Full query lifecycle: Ingestion → Retrieval → Minimisation → Airlock → Receipt
 
 ## Phase 8 — Documentation & Demo
 

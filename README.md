@@ -67,6 +67,22 @@ reference dataset from `datasets/` into `memory_store/memory.db`.
 
 `answer`, `evidence`, `sources`, `receipt`
 
+Policy-blocked payloads return HTTP `400` with `{ "error": "policy_blocked", "message": "...", "warnings": [] }`.
+
+## SDK Integration (Step 8)
+
+The question lifecycle runs retrieval, then sieve + airlock governance over the unified outbound context (question + evidence), then forensic receipt generation:
+
+```text
+Ingestion → Retrieval → Minimisation → Outbound Airlock → Immutable Forensic Receipt
+```
+
+| Component | Package | Role |
+|-----------|---------|------|
+| `OutboundContextProcessor` | `sovereign-sdk-airlock` | Policy evaluation + sieve orchestration |
+| `SovereignLedger` | `sovereign-sdk-ledger` | Append-only forensic receipt commits |
+| `airlock_policy.yaml` | local config | Deny rules for credentials and key material |
+
 ## Frontend Quick Start
 
 ```bash

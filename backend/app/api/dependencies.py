@@ -3,6 +3,7 @@
 from fastapi import Request
 
 from app.repositories.memory_repository import MemoryRepository
+from app.sdk.boundary import OutboundContextProcessor
 from app.services.memory_service import MemoryService
 from app.services.receipt_service import ReceiptService
 
@@ -35,3 +36,13 @@ def get_memory_repository(request: Request) -> MemoryRepository:
     :rtype: MemoryRepository
     """
     return request.app.state.memory_repository
+
+
+def get_outbound_processor(request: Request) -> OutboundContextProcessor:
+    """Return the application-scoped outbound context processor.
+
+    :param Request request: Incoming HTTP request carrying application state.
+    :returns: SDK outbound processor initialized during application startup.
+    :rtype: OutboundContextProcessor
+    """
+    return request.app.state.outbound_processor

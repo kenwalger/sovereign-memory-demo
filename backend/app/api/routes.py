@@ -6,11 +6,17 @@ import json
 from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException, status
+from sovereign_airlock import AirlockPolicyViolation
 
-from app.api.dependencies import get_memory_service, get_receipt_service
+from app.api.dependencies import (
+    get_memory_service,
+    get_outbound_processor,
+    get_receipt_service,
+)
 from app.api.schemas import QuestionRequest, QuestionResponse, SourceAttributionResponse
 from app.models import Record
 from app.receipts import build_evidence_strings
+from app.sdk.boundary import OutboundContextProcessor
 from app.services.exceptions import ReceiptDuplicateError
 from app.services.memory_service import MemoryService
 from app.services.receipt_service import ReceiptService
@@ -27,19 +33,36 @@ async def ask_question(
     payload: QuestionRequest,
     memory_service: MemoryService = Depends(get_memory_service),
     receipt_service: ReceiptService = Depends(get_receipt_service),
+    outbound_processor: OutboundContextProcessor = Depends(get_outbound_processor),
 ) -> QuestionResponse:
-    """Execute the question lifecycle: retrieve, answer, attribute, and receipt.
+    """Execute the question lifecycle: retrieve, minimize, govern, and receipt.
 
-    Retrieves matching memory records, assembles a mock answer and provenance
+    Retrieves matching memory records, runs sieve and airlock governance over
+    the unified outbound context, assembles a mock answer and provenance
     metadata, and generates or reuses a forensic receipt for the evidence set.
 
     :param QuestionRequest payload: Validated inbound question request body.
     :param MemoryService memory_service: Application-scoped memory service.
     :param ReceiptService receipt_service: Application-scoped receipt service.
+    :param OutboundContextProcessor outbound_processor: SDK outbound processor.
     :returns: Answer text, evidence strings, source attributions, and receipt.
     :rtype: QuestionResponse
+    :raises HTTPException: With status 400 when airlock policy blocks the payload.
     """
     records = await memory_service.retrieve_context(payload.question)
+    raw_evidence = build_evidence_strings(records)
+
+    try:
+        airlock_result = await outbound_processor.process(payload.question, raw_evidence)
+    except AirlockPolicyViolation as exc:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail={
+                "error": "policy_blocked",
+                "message": str(exc),
+                "warnings": exc.warnings,
+            },
+        ) from exc
 
     if not records:
         return QuestionResponse(
@@ -49,8 +72,8 @@ async def ask_question(
             receipt=None,
         )
 
+    sieved_evidence = _split_sieved_evidence(airlock_result.sieved_content)
     answer = _build_mock_answer(records)
-    evidence = build_evidence_strings(records)
     attributions = memory_service.assemble_source_attribution(records)
     sources = [
         SourceAttributionResponse(
@@ -69,11 +92,13 @@ async def ask_question(
         receipt_service,
         records,
         confidence,
+        airlock_result=airlock_result,
+        sieved_evidence=sieved_evidence,
     )
 
     return QuestionResponse(
         answer=answer,
-        evidence=evidence,
+        evidence=sieved_evidence,
         sources=sources,
         receipt=receipt_payload,
     )
@@ -100,6 +125,20 @@ async def get_receipt(
         )
 
     return json.loads(receipt.receipt_json)
+
+
+def _split_sieved_evidence(sieved_content: str) -> list[str]:
+    """Split minimized sieve output into displayable evidence chunks.
+
+    :param str sieved_content: Minimized outbound context string.
+    :returns: Non-empty evidence chunks derived from the sieved content.
+    :rtype: list[str]
+    """
+    if not sieved_content.strip():
+        return []
+
+    chunks = [chunk.strip() for chunk in sieved_content.split("\n") if chunk.strip()]
+    return chunks or [sieved_content.strip()]
 
 
 def _build_mock_answer(records: list[Record]) -> str:
@@ -135,19 +174,29 @@ def _generate_or_fetch_receipt(
     receipt_service: ReceiptService,
     records: list[Record],
     confidence: float,
+    *,
+    airlock_result,
+    sieved_evidence: list[str],
 ) -> dict[str, Any]:
     """Generate a receipt or return an existing receipt for identical evidence.
 
     :param ReceiptService receipt_service: Service used to create or fetch receipts.
     :param list[Record] records: Evidence records backing the answer.
     :param float confidence: Aggregated confidence score for the receipt.
+    :param airlock_result: Successful airlock processing result for SDK metadata.
+    :param list[str] sieved_evidence: Minimized evidence strings for persistence.
     :returns: Parsed forensic receipt JSON body.
     :rtype: dict[str, Any]
     :raises ReceiptDuplicateError: If a duplicate hash is detected but the
         existing receipt cannot be retrieved.
     """
     try:
-        receipt = receipt_service.generate_forensic_receipt(records, confidence)
+        receipt = receipt_service.generate_forensic_receipt(
+            records,
+            confidence,
+            airlock_result=airlock_result,
+            sieved_evidence=sieved_evidence,
+        )
     except ReceiptDuplicateError as exc:
         existing = receipt_service.retrieve_receipt_by_payload_hash(exc.payload_hash)
         if existing is None:
