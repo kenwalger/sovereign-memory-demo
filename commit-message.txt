@@ -1,5 +1,4 @@
-refactor(backend): align dataset expunge paths and prune dead params
+docs: polish README onboarding and align production CORS domain
 
-Expunge ingested documents and child records in _ingest_file_sync to match
-_load_existing_documents, and drop the unused records argument from
-_build_mock_answer.
+Wrap README source lines, add Quick Start demo queries, and default CORS
+fallback to https://sovereignplatform.dev to match the documented frontend target.

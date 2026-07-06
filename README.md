@@ -1,10 +1,38 @@
 # Sovereign Memory Demo
 
-Canonical reference implementation of the [Sovereign Systems Specification](https://github.com/kenwalger/sovereign-memory-demo).
+Canonical reference implementation of the
+[Sovereign Systems Specification](https://github.com/kenwalger/sovereign-memory-demo).
 
-This application demonstrates that **semantic retrieval** and **immutable institutional memory** are not equivalent. Retrieval answers *"Can I find it?"* — memory answers *"Can I trust it?"*
+This application demonstrates that **semantic retrieval** and **immutable
+institutional memory** are not equivalent. Retrieval answers *"Can I find it?"*
+— memory answers *"Can I trust it?"*
 
-**Production frontend target:** [sovereignplatform.dev/demos/memory](https://sovereignplatform.dev/demos/memory)
+**Production frontend target:**
+[sovereignplatform.dev/demos/memory](https://sovereignplatform.dev/demos/memory)
+
+## 🚀 Quick Start: Try These Queries
+
+Start the backend and frontend (see [Backend Quick Start](#backend-quick-start)
+and [Frontend Quick Start](#frontend-quick-start)), then paste these prompts
+into the question panel to walk the twin narrative paths of the demo:
+
+1. **Pinpoint Entity Retrieval**
+   ```text
+   Who is Fido?
+   ```
+
+2. **Contextual Provenance**
+   ```text
+   What evidence connects Fido to the Miller family?
+   ```
+
+3. **Long-Context Token Optimization / Prose Tax**
+   ```text
+   Summarize all real estate transactions and properties for the John Miller household in 1908.
+   ```
+
+> **Walkthrough media:** Screenshots and a short video demo will be linked here
+> before the interview showcase.
 
 ## Repository Layout
 
@@ -38,13 +66,11 @@ sovereign-memory-demo/
 
 ## Requirements
 
-
 | Layer    | Runtime                                            |
 | -------- | -------------------------------------------------- |
 | Backend  | Python **3.14+**, [uv](https://docs.astral.sh/uv/) |
 | Frontend | Node.js 20+, npm, Vite                             |
 | Storage  | SQLite (local `memory_store/`)                     |
-
 
 ## Backend Quick Start
 
@@ -90,16 +116,16 @@ SOVEREIGN_NODE_SECRET="your-secret-key" uv run uvicorn main:app --reload --port 
 ```
 
 **Optional:** `SOVEREIGN_ALLOWED_ORIGINS` configures production CORS origins
-(comma-separated). Defaults to `https://demo.sovereignsystems.io` when unset.
+(comma-separated). Defaults to `https://sovereignplatform.dev` when unset.
 Local Vite dev hosts are permitted only when `SOVEREIGN_ENV=development` is set
 explicitly alongside your local secret configuration.
 
-On startup the backend initializes the SQLite schema and ingests the
-reference dataset from `datasets/` into `memory_store/memory.db`.
-Cryptographic identity keys under `memory_store/.sovereign_keys/` are gitignored and must never be committed.
+On startup the backend initializes the SQLite schema and ingests the reference
+dataset from `datasets/` into `memory_store/memory.db`. Cryptographic identity
+keys under `memory_store/.sovereign_keys/` are gitignored and must never be
+committed.
 
 ### API (Step 6)
-
 
 | Endpoint             | Method | Description                            |
 | -------------------- | ------ | -------------------------------------- |
@@ -107,28 +133,27 @@ Cryptographic identity keys under `memory_store/.sovereign_keys/` are gitignored
 | `/api/questions`     | POST   | Question → answer → evidence → receipt |
 | `/api/receipts/{id}` | GET    | Fetch forensic receipt by ID           |
 
-
 #### `POST /api/questions` response keys
 
 `answer`, `evidence`, `sources`, `receipt`
 
-Policy-blocked payloads return HTTP `400` with `{ "error": "policy_blocked", "message": "...", "warnings": [] }`.
+Policy-blocked payloads return HTTP `400` with
+`{ "error": "policy_blocked", "message": "...", "warnings": [] }`.
 
 ## SDK Integration (Step 8)
 
-The question lifecycle runs retrieval, then sieve + airlock governance over the unified outbound context (question + evidence), then forensic receipt generation:
+The question lifecycle runs retrieval, then sieve + airlock governance over the
+unified outbound context (question + evidence), then forensic receipt generation:
 
 ```text
 Ingestion → Retrieval → Minimisation → Outbound Airlock → Immutable Forensic Receipt
 ```
-
 
 | Component                  | Package                 | Role                                        |
 | -------------------------- | ----------------------- | ------------------------------------------- |
 | `OutboundContextProcessor` | `sovereign-sdk-airlock` | Policy evaluation + sieve orchestration     |
 | `SovereignLedger`          | `sovereign-sdk-ledger`  | Append-only forensic receipt commits        |
 | `airlock_policy.yaml`      | local config            | Deny rules for credentials and key material |
-
 
 ## Frontend Quick Start
 
@@ -140,10 +165,10 @@ npm run dev
 
 Open `http://localhost:5173` with the backend running on port `8000`.
 The Vite dev server proxies `/api` requests to the backend.
-The backend also mounts `CORSMiddleware` for direct cross-origin access during showcase deployments.
+The backend also mounts `CORSMiddleware` for direct cross-origin access during
+showcase deployments.
 
 ### Panels
-
 
 | Component       | Purpose                                    |
 | --------------- | ------------------------------------------ |
@@ -151,7 +176,6 @@ The backend also mounts `CORSMiddleware` for direct cross-origin access during s
 | `AnswerPanel`   | Mock natural-language answer               |
 | `EvidencePanel` | Raw evidence chunks and source attribution |
 | `ReceiptPanel`  | Forensic receipt JSON envelope             |
-
 
 ### Run Tests
 
@@ -162,16 +186,13 @@ uv run pytest
 
 ## Data Model
 
-
 | Entity     | Purpose                                                                      |
 | ---------- | ---------------------------------------------------------------------------- |
 | `Document` | Source file metadata ingested from `datasets/`                               |
 | `Record`   | Extracted semantic chunk ready for retrieval                                 |
 | `Receipt`  | Forensic envelope (`sequence` autoincrement PK, `payload_hash` unique index) |
 
-
 ## Retrieval Layer
-
 
 | Component          | Method                                           | Purpose                                        |
 | ------------------ | ------------------------------------------------ | ---------------------------------------------- |
@@ -181,17 +202,19 @@ uv run pytest
 | `MemoryService`    | `assemble_source_attribution(records)`           | Record → Document provenance mapping           |
 | `ReceiptService`   | `generate_forensic_receipt(records, confidence)` | SHA-256 sealed receipt persistence             |
 
-
 ## Reference Dataset
 
 Shipped under `datasets/`:
 
 - `accession_records.json`
 - `curator_notes.md`
-- `property_ledger_1908.txt` — verbose 1908 household ledger with real estate transaction tables and administrative boilerplate (ideal for Prose Tax token-savings demos)
+- `property_ledger_1908.txt` — verbose 1908 household ledger with real estate
+  transaction tables and administrative boilerplate (ideal for Prose Tax
+  token-savings demos)
 - `photograph_catalog.json`
 
-**Demo query for token optimization:** *"Summarize all real estate transactions and properties for the John Miller household in 1908"*
+See [Quick Start: Try These Queries](#-quick-start-try-these-queries) for
+copy-paste demo prompts.
 
 ## Sovereign SDK Dependencies
 

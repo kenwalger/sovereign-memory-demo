@@ -156,3 +156,10 @@ Cross-referenced against [Technical Specification v1](project_specs/sovereign-me
 - [x] Receipt flush/commit `IntegrityError` envelope raises `ReceiptDuplicateError`
 - [x] Dataset reload uses `joinedload(Document.records)` with session expunge
 - [x] Whitespace-only `SOVEREIGN_NODE_SECRET` rejected at startup
+- [x] `_ingest_file_sync` expunge path aligned with reload hydration
+
+## Pre-Interview Polish
+
+- [x] README wrapped source formatting and Quick Start query onboarding
+- [x] Production CORS default aligned to `https://sovereignplatform.dev`
+- [x] `_build_mock_answer` unused `records` parameter removed

@@ -87,7 +87,7 @@ A single `SovereignLedger` handle is shared between `AirlockBoundary` and `Recei
 
 Cross-origin browser requests are supported via `CORSMiddleware`. Production
 origins are read from `SOVEREIGN_ALLOWED_ORIGINS` (comma-separated, default
-`https://demo.sovereignsystems.io`). Local Vite dev hosts are included only when
+`https://sovereignplatform.dev`). Local Vite dev hosts are included only when
 `SOVEREIGN_ENV=development` is set explicitly.
 
 ## Test

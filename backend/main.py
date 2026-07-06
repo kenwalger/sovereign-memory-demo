@@ -116,7 +116,7 @@ _LOCAL_DEV_ORIGINS: tuple[str, ...] = (
 )
 """tuple[str, ...]: Local Vite and dev-server origins permitted only in development mode."""
 
-_DEFAULT_PRODUCTION_ORIGIN = "https://demo.sovereignsystems.io"
+_DEFAULT_PRODUCTION_ORIGIN = "https://sovereignplatform.dev"
 """str: Fallback production origin when ``SOVEREIGN_ALLOWED_ORIGINS`` is unset."""
 
 
