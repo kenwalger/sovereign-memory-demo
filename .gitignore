@@ -201,6 +201,12 @@ local_settings.py
 db.sqlite3
 db.sqlite3-journal
 
+# Sovereign Memory Demo local SQLite footprint
+memory_store/*.db
+memory_store/*.db-journal
+memory_store/*.sqlite
+memory_store/*.sqlite3
+
 # Flask stuff:
 instance/
 .webassets-cache
@@ -301,3 +307,5 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
+project_specs/
+project_planning/

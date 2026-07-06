@@ -1,0 +1,20 @@
+# sovereign-memory-demo Project Rules
+
+## Technical Invariants
+- **Project Management:** Use `uv` exclusively for all project management, virtual environment creation (`uv venv`), tool execution, and dependency locking (`uv lock`).
+- **Runtime Environment:** Explicitly target Python 3.14+ for all backend services. Utilize strict static type hinting and modern Python idioms natively.
+- **Style Enforcement:** Strictly adhere to PEP 8 standards for all Python code layouts, naming conventions, and docstring structures. 
+- **Dependency Hierarchy:** The open-core primitives must be loaded strictly matching their PyPI registrations (`sovereign-sdk-core>=1.3.0`, `sovereign-sdk-sieve>=1.3.0`, `sovereign-sdk-ledger>=1.3.0`, and `sovereign-sdk-airlock>=1.4.0`).
+- **Data Custody:** Every query lifecycle must proceed deterministically: Ingestion Filter → Retrieval → Context Minimisation → Outbound Airlock Policy Check → Immutable Forensic Receipt Stamp.
+
+## Defensive Development Workflow
+- **Test-Driven Execution (TDD):** Propose file structures and method signatures before writing code. Every repository module, dataset loader, and service must be backed by matching `pytest` assertions.
+- **Fail-Fast Boot Configurations:** Always implement strict type coercion and range validation when reading source assets or dataset schemas at startup. Malformed data must trigger explicit initialization errors rather than running blindly.
+- **Non-Blocking Async Semantics:** Any CPU-heavy processing—such as local regex matching or cryptographic receipt signing—must be explicitly wrapped via `asyncio.to_thread` to preserve FastAPI event-loop concurrency.
+
+## Operational Lifecycle Invariants (End-of-Turn Routine)
+Before signaling the completion of any development sub-task or code modification turn, the model must verify and execute these tracking updates:
+1. **README.md Sync:** Ensure that any newly added API surface, configuration environment variable, or tool setup is documented inside the project root or package-level `README.md`.
+2. **CHANGELOG.md Tracking:** Document added features, bug fixes, or behavioral modifications under an `[Unreleased]` tracking block inside `CHANGELOG.md` immediately following code modifications.
+3. **ROADMAP.md Verification:** Cross-reference implemented work against the target spec and check off finished milestones inside `ROADMAP.md`.
+4. **Commit Manifest Assembly (`commit-message.txt`):** Compile a structured, clear Conventional Commits format message (e.g., `feat(api): add async health check endpoint`) and write it to `commit-message.txt` at the root, making the workspace instantly ready for an operator git commit.
