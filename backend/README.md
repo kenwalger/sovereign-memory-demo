@@ -28,6 +28,13 @@ reference dataset from `../datasets/` into `../memory_store/memory.db`.
 | `Evidence` | Verified excerpt for a query lifecycle         |
 | `Receipt`  | Forensic envelope (`payload_hash` unique index)|
 
+## Retrieval
+
+| Component          | Method                              |
+|--------------------|-------------------------------------|
+| `MemoryRepository` | `search_records`, `get_document_by_id` |
+| `MemoryService`    | `retrieve_context`, `assemble_source_attribution` |
+
 ## Run
 
 ```bash

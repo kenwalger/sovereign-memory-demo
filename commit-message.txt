@@ -1,6 +1,6 @@
-feat(data): add schema models, governance docs, and dataset ingestion
+feat(retrieval): add MemoryRepository and MemoryService query layer
 
-Introduce SQLAlchemy 2.0 entities (Document, Record, Evidence, Receipt)
-with payload_hash unique index, fail-fast DatasetService startup loader,
-reference datasets, MIT LICENSE/CONTRIBUTING/SECURITY scaffolding, and
-comprehensive pytest coverage for valid and malformed ingestion paths.
+Implement SQLAlchemy keyword search across ingested Record chunks,
+async retrieve_context with stop-word sanitization, source attribution
+mapping to parent Documents, and comprehensive pytest coverage for
+matched, empty, and unmatched query bounds.

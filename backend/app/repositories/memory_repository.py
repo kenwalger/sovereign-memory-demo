@@ -1,0 +1,45 @@
+"""Repository queries for localized memory record retrieval."""
+
+from __future__ import annotations
+
+from sqlalchemy import func, or_, select
+from sqlalchemy.orm import Session, joinedload, sessionmaker
+
+from app.models import Document, Record
+
+
+class MemoryRepository:
+    """Execute SQLAlchemy 2.0 queries against ingested memory records."""
+
+    def __init__(self, session_factory: sessionmaker[Session]) -> None:
+        self._session_factory = session_factory
+
+    def search_records(self, query: str, limit: int = 3) -> list[Record]:
+        """Return record chunks whose title or content match the query terms."""
+        terms = query.split()
+        if not terms:
+            return []
+
+        statement = (
+            select(Record)
+            .options(joinedload(Record.document))
+            .order_by(Record.confidence.desc(), Record.title.asc())
+            .limit(limit)
+        )
+
+        for term in terms:
+            pattern = f"%{term}%"
+            statement = statement.where(
+                or_(
+                    func.lower(Record.title).like(pattern),
+                    func.lower(Record.content).like(pattern),
+                )
+            )
+
+        with self._session_factory() as session:
+            return list(session.scalars(statement).unique().all())
+
+    def get_document_by_id(self, doc_id: str) -> Document | None:
+        """Fetch upstream source document metadata for attribution."""
+        with self._session_factory() as session:
+            return session.get(Document, doc_id)

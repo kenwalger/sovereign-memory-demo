@@ -77,6 +77,15 @@ uv run pytest
 | `Evidence` | Verified excerpt linked to a query lifecycle         |
 | `Receipt`  | Forensic envelope with unique `payload_hash` index   |
 
+## Retrieval Layer
+
+| Component | Method | Purpose |
+|-----------|--------|---------|
+| `MemoryRepository` | `search_records(query, limit=3)` | Keyword matching across `Record` title/content |
+| `MemoryRepository` | `get_document_by_id(doc_id)` | Upstream source document lookup |
+| `MemoryService` | `retrieve_context(question)` | Async sanitized query orchestration |
+| `MemoryService` | `assemble_source_attribution(records)` | Record → Document provenance mapping |
+
 ## Reference Dataset
 
 Shipped under `datasets/`:

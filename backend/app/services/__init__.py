@@ -8,6 +8,7 @@ from app.services.exceptions import (
     DatasetSchemaError,
     DatasetValidationError,
 )
+from app.services.memory_service import MemoryService, SourceAttribution
 
 __all__ = [
     "DatasetEncodingError",
@@ -16,4 +17,6 @@ __all__ = [
     "DatasetSchemaError",
     "DatasetService",
     "DatasetValidationError",
+    "MemoryService",
+    "SourceAttribution",
 ]

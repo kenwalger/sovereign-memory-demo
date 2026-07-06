@@ -9,7 +9,7 @@ Cross-referenced against [Technical Specification v1](project_specs/sovereign-me
 | 1    | Create repository structure            | **Done**    |
 | 2    | Implement SQLite models                  | **Done**    |
 | 3    | Implement dataset loader                 | **Done**    |
-| 4    | Implement retrieval services             | Pending     |
+| 4    | Implement retrieval services             | **Done**    |
 | 5    | Implement receipt generation             | Pending     |
 | 6    | Implement API routes                     | Pending     |
 | 7    | Implement React UI                       | Pending     |
@@ -35,7 +35,10 @@ Cross-referenced against [Technical Specification v1](project_specs/sovereign-me
 
 ## Phase 3 — Memory & Retrieval
 
-- [ ] `MemoryService` search / retrieve / get_sources
+- [x] `MemoryRepository` keyword search across ingested `Record` chunks
+- [x] `MemoryService.retrieve_context` with query sanitization
+- [x] `MemoryService.assemble_source_attribution` provenance mapping
+- [x] Retrieval unit tests (`test_memory_service.py`)
 
 ## Phase 4 — Forensic Receipts
 

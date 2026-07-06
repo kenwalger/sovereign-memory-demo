@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- `MemoryRepository` with keyword search and document lookup (`search_records`, `get_document_by_id`)
+- `MemoryService` async retrieval orchestration (`retrieve_context`, `assemble_source_attribution`)
+- `SourceAttribution` provenance dataclass mapping records to parent documents
+- Unit test suite `backend/tests/test_memory_service.py` (10 retrieval and attribution tests)
 - MIT `LICENSE`, `CONTRIBUTING.md`, and `SECURITY.md` open-source governance scaffolding
 - SQLAlchemy 2.0 relational models: `Document`, `Record`, `Evidence`, `Receipt`
 - Unique index on `Receipt.payload_hash` for forensic cryptographic linkage
