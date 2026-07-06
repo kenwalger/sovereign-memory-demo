@@ -50,11 +50,12 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     await dataset_service.load_dataset()
 
     memory_repository = MemoryRepository(session_factory)
+    SOVEREIGN_LEDGER_PATH.parent.mkdir(parents=True, exist_ok=True)
     ledger = SovereignLedger(str(SOVEREIGN_LEDGER_PATH))
     boundary = create_airlock_boundary(
         AIRLOCK_POLICY_PATH,
         SOVEREIGN_KEYS_PATH,
-        SOVEREIGN_LEDGER_PATH,
+        ledger,
     )
 
     app.state.engine = engine

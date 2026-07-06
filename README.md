@@ -117,7 +117,7 @@ uv run pytest
 | `Document` | Source file metadata ingested from `datasets/`       |
 | `Record`   | Extracted semantic chunk ready for retrieval         |
 | `Evidence` | Verified excerpt linked to a query lifecycle         |
-| `Receipt`  | Forensic envelope with unique `payload_hash` index   |
+| `Receipt`  | Forensic envelope (`sequence` autoincrement PK, `payload_hash` unique index)|
 
 ## Retrieval Layer
 

@@ -1,5 +1,6 @@
-feat(sdk): integrate sieve, airlock, and ledger into question lifecycle
+fix(robustness): resolve concurrency, ledger leak, and error rendering
 
-Wire sovereign-sdk-sieve and sovereign-sdk-airlock into POST /api/questions
-via OutboundContextProcessor, commit forensic receipts through
-sovereign-sdk-ledger, and return structured HTTP 400 on policy violations.
+Replace non-atomic receipt ID counting with SQLite autoincrement sequences,
+offload receipt persistence via asyncio.to_thread, inject a singleton
+SovereignLedger into AirlockBoundary, and unpack structured FastAPI error
+detail objects in the frontend API client.

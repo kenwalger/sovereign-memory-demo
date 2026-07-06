@@ -54,7 +54,7 @@ def test_generate_forensic_receipt_persists_receipt_row(
     assert receipt.ledger_reference == f"LEDGER-{receipt.payload_hash[:8].upper()}"
 
     with session_factory() as session:
-        stored = session.get(Receipt, receipt.id)
+        stored = session.scalar(select(Receipt).where(Receipt.id == receipt.id))
 
     assert stored is not None
     assert stored.payload_hash == receipt.payload_hash

@@ -23,20 +23,18 @@ def build_unified_context(question: str, evidence: list[str]) -> str:
 def create_airlock_boundary(
     policy_path: Path,
     signing_key_path: Path,
-    ledger_path: Path,
+    ledger: SovereignLedger,
 ) -> AirlockBoundary:
     """Construct an :class:`AirlockBoundary` wired to local policy, keys, and ledger.
 
     :param Path policy_path: Filesystem path to the YAML airlock policy file.
     :param Path signing_key_path: Directory for Ed25519 signing key material.
-    :param Path ledger_path: SQLite path for the append-only sovereign ledger.
+    :param SovereignLedger ledger: Shared append-only sovereign ledger handle.
     :returns: Configured airlock boundary ready for outbound processing.
     :rtype: AirlockBoundary
     :raises AirlockConfigurationError: If the policy file is missing or invalid.
     """
     signing_key_path.mkdir(parents=True, exist_ok=True)
-    ledger_path.parent.mkdir(parents=True, exist_ok=True)
-    ledger = SovereignLedger(str(ledger_path))
     return AirlockBoundary(policy_path, signing_key_path, ledger=ledger)
 
 

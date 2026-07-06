@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 import json
 from typing import Any
 
@@ -88,12 +89,13 @@ async def ask_question(
         for attribution in attributions
     ]
     confidence = _calculate_confidence(records)
-    receipt_payload = _generate_or_fetch_receipt(
+    receipt_payload = await asyncio.to_thread(
+        _generate_or_fetch_receipt,
         receipt_service,
         records,
         confidence,
-        airlock_result=airlock_result,
-        sieved_evidence=sieved_evidence,
+        airlock_result,
+        sieved_evidence,
     )
 
     return QuestionResponse(
@@ -174,7 +176,6 @@ def _generate_or_fetch_receipt(
     receipt_service: ReceiptService,
     records: list[Record],
     confidence: float,
-    *,
     airlock_result,
     sieved_evidence: list[str],
 ) -> dict[str, Any]:

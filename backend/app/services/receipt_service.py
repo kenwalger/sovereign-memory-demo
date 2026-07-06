@@ -7,7 +7,7 @@ import sqlite3
 from datetime import UTC, datetime
 from typing import Any
 
-from sqlalchemy import func, select
+from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session, sessionmaker
 from sovereign_airlock import AirlockResult
@@ -91,13 +91,28 @@ class ReceiptService:
             if self._payload_hash_exists(session, payload_hash):
                 raise ReceiptDuplicateError(payload_hash)
 
-            receipt_id = self._allocate_receipt_id(session)
-            answer_id = f"ANS-{receipt_id.removeprefix('FR-')}"
             timestamp = datetime.now(UTC).isoformat()
+
+            receipt = Receipt(
+                confidence=confidence_score,
+                receipt_json="{}",
+                payload_hash=payload_hash,
+                ledger_reference=ledger_reference,
+                created_at=timestamp,
+                answer_id="",
+            )
+            session.add(receipt)
+            session.flush()
+
+            receipt_id = self._format_receipt_id(receipt.sequence)
+            answer_id = f"ANS-{receipt.sequence:04d}"
+            receipt.id = receipt_id
+            receipt.answer_id = answer_id
 
             if forensic_metadata is None:
                 forensic_metadata = build_forensic_seal(payload_hash, receipt_id)
                 ledger_reference = forensic_metadata["ledger_reference"]
+                receipt.ledger_reference = ledger_reference
 
             receipt_body: dict[str, Any] = {
                 "receipt_id": receipt_id,
@@ -108,19 +123,9 @@ class ReceiptService:
                 "ledger_reference": ledger_reference,
                 "metadata": forensic_metadata,
             }
-
-            receipt = Receipt(
-                id=receipt_id,
-                answer_id=answer_id,
-                confidence=confidence_score,
-                receipt_json=json.dumps(receipt_body),
-                payload_hash=payload_hash,
-                ledger_reference=ledger_reference,
-                created_at=timestamp,
-            )
+            receipt.receipt_json = json.dumps(receipt_body)
 
             try:
-                session.add(receipt)
                 session.commit()
             except IntegrityError as exc:
                 session.rollback()
@@ -238,15 +243,14 @@ class ReceiptService:
         return existing is not None
 
     @staticmethod
-    def _allocate_receipt_id(session: Session) -> str:
-        """Allocate the next sequential forensic receipt identifier.
+    def _format_receipt_id(sequence: int) -> str:
+        """Format a forensic receipt identifier from an autoincrement sequence.
 
-        :param Session session: Active database session used to count receipts.
+        :param int sequence: Database-assigned autoincrement sequence value.
         :returns: Forensic receipt identifier in ``FR-####`` format.
         :rtype: str
         """
-        receipt_count = session.scalar(select(func.count()).select_from(Receipt)) or 0
-        return f"FR-{receipt_count + 1:04d}"
+        return f"FR-{sequence:04d}"
 
     def retrieve_receipt(self, receipt_id: str) -> Receipt | None:
         """Fetch a persisted receipt by its forensic identifier.
@@ -256,7 +260,7 @@ class ReceiptService:
         :rtype: Receipt | None
         """
         with self._session_factory() as session:
-            return session.get(Receipt, receipt_id)
+            return session.scalar(select(Receipt).where(Receipt.id == receipt_id))
 
     def retrieve_receipt_by_payload_hash(self, payload_hash: str) -> Receipt | None:
         """Fetch a persisted receipt by its deterministic payload hash.

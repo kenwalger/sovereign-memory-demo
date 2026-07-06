@@ -71,3 +71,11 @@ Cross-referenced against [Technical Specification v1](project_specs/sovereign-me
 
 - [ ] Screenshots and video walkthrough
 - [ ] Conference-ready demonstration assets
+
+## Production Robustness (PR Final Polish)
+
+- [x] Atomic receipt ID allocation via SQLite autoincrement sequence
+- [x] Non-blocking receipt persistence via `asyncio.to_thread` in `POST /api/questions`
+- [x] Singleton `SovereignLedger` handle injected into airlock boundary (no dual-writer leak)
+- [x] Frontend structured FastAPI error detail rendering (policy blocks and validation errors)
+- [x] Gitignore hardening for `*.db` / `*.sqlite3` artifacts

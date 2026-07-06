@@ -33,6 +33,55 @@ export class ApiError extends Error {
 }
 
 /**
+ * Serialize a FastAPI error `detail` payload into a human-readable message.
+ *
+ * @param detail - FastAPI `detail` field, which may be a string, structured object,
+ *   or validation error array.
+ * @returns Readable error text suitable for UI display.
+ */
+function formatErrorDetail(detail: unknown): string {
+  if (typeof detail === "string") {
+    return detail;
+  }
+
+  if (Array.isArray(detail)) {
+    return detail
+      .map((item) => {
+        if (item && typeof item === "object" && "msg" in item) {
+          const entry = item as { loc?: unknown; msg: unknown };
+          const location = Array.isArray(entry.loc)
+            ? entry.loc.join(".")
+            : entry.loc
+              ? String(entry.loc)
+              : "";
+          return location ? `${location}: ${String(entry.msg)}` : String(entry.msg);
+        }
+        return JSON.stringify(item);
+      })
+      .join("; ");
+  }
+
+  if (detail && typeof detail === "object") {
+    const record = detail as Record<string, unknown>;
+    if (typeof record.message === "string") {
+      const warnings = Array.isArray(record.warnings)
+        ? record.warnings.map(String)
+        : [];
+      if (warnings.length > 0) {
+        return `${record.message} Warnings: ${warnings.join("; ")}`;
+      }
+      return record.message;
+    }
+    if (typeof record.error === "string" && typeof record.message === "string") {
+      return `${record.error}: ${record.message}`;
+    }
+    return JSON.stringify(detail);
+  }
+
+  return String(detail);
+}
+
+/**
  * Parse a fetch response or raise an {@link ApiError}.
  *
  * @typeParam T - Expected JSON response shape.
@@ -44,9 +93,9 @@ async function parseResponse<T>(response: Response): Promise<T> {
   if (!response.ok) {
     let detail = response.statusText;
     try {
-      const body = (await response.json()) as { detail?: string };
-      if (body.detail) {
-        detail = body.detail;
+      const body = (await response.json()) as { detail?: unknown };
+      if (body.detail !== undefined) {
+        detail = formatErrorDetail(body.detail);
       }
     } catch {
       // Response body is not JSON; keep status text.

@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Atomic receipt ID allocation using SQLite autoincrement `sequence` primary key on `Receipt`
+- Non-blocking forensic receipt persistence via `asyncio.to_thread` in `POST /api/questions`
+- Shared `SovereignLedger` handle injected into `AirlockBoundary` (eliminates dual-writer file locks)
+- Frontend `formatErrorDetail` helper for structured FastAPI `detail` payloads (policy blocks, 422 validation)
 - Sovereign SDK integration: `OutboundContextProcessor` wires sieve + airlock into `POST /api/questions`
 - `backend/config/airlock_policy.yaml` deny rules for API keys and private key material
 - `ReceiptService` ledger commits via `sovereign-sdk-ledger` with SDK telemetry metadata
@@ -43,3 +47,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - FastAPI application entrypoint (`backend/main.py`) with `GET /api/health` checkpoint
 - Async health route integration test (`backend/tests/test_main.py`) using pytest and httpx
 - Project tracking documents: `README.md`, `CHANGELOG.md`, `ROADMAP.md`
+
+### Fixed
+
+- Receipt ID race condition under concurrent requests (replaced `COUNT + 1` allocation)
+- Ledger file handle leak from duplicate `SovereignLedger` instantiation in `create_airlock_boundary`
+- Frontend `"[object Object]"` fallback when policy violation errors return structured `detail` objects
+
+### Changed
+
+- `.gitignore` now blocks `*.db` and `*.sqlite3` repository-wide

@@ -46,6 +46,10 @@ reference dataset from `../datasets/` into `../memory_store/memory.db`.
 
 Policy violations on `POST /api/questions` return HTTP `400` with `{ error, message, warnings }`.
 
+Receipt IDs are allocated atomically via SQLite autoincrement (`Receipt.sequence`).
+Forensic receipt persistence runs in `asyncio.to_thread` to avoid blocking the event loop.
+A single `SovereignLedger` handle is shared between `AirlockBoundary` and `ReceiptService`.
+
 ## Run
 
 ```bash

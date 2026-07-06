@@ -35,7 +35,7 @@ async def api_client(
     boundary = create_airlock_boundary(
         airlock_policy_path,
         sovereign_keys_path,
-        sovereign_ledger_path,
+        ledger,
     )
 
     app.state.session_factory = session_factory
