@@ -35,20 +35,67 @@ export interface SourceAttribution {
 }
 
 /**
- * Forensic seal metadata embedded inside a receipt envelope.
+ * Shared forensic metadata fields present on every receipt envelope.
  *
  * @property payload_hash - Deterministic pre-sieve SHA-256 digest of evidence strings.
- * @property signature - Simulated tamper-evident signature for audit replay.
- * @property seal_algorithm - Algorithm identifier used by the seal simulation.
  * @property ledger_reference - Ledger linkage reference derived from the payload hash.
  * @property airlock_boundary - Outbound governance boundary label for airlock integration.
  */
-export interface ReceiptMetadata {
+export interface ReceiptMetadataBase {
   payload_hash: string;
-  signature: string;
-  seal_algorithm: string;
   ledger_reference: string;
   airlock_boundary: string;
+}
+
+/**
+ * Offline simulated seal metadata emitted without a live SDK ledger commit.
+ *
+ * @property signature - Tamper-evident signature for audit replay.
+ * @property seal_algorithm - Algorithm identifier used by the seal simulation.
+ */
+export interface SimulatedSealMetadata extends ReceiptMetadataBase {
+  signature: string;
+  seal_algorithm: string;
+}
+
+/**
+ * Live SDK telemetry metadata emitted by sieve and airlock processing.
+ *
+ * @property raw_tokens - Token count of the unified outbound context before sieve.
+ * @property sieved_tokens - Token count after context minimisation.
+ * @property tax_savings_percentage - Prose Tax savings percentage from the sieve pass.
+ * @property policy_warnings - Non-blocking airlock policy warnings, if any.
+ * @property signature - Optional Ed25519 signature from the SDK forensic receipt.
+ * @property public_key - Optional public key associated with the SDK signature.
+ * @property sdk_timestamp - Optional ISO timestamp from the SDK receipt envelope.
+ * @property sdk_metadata - Optional nested SDK receipt metadata payload.
+ */
+export interface SdkReceiptMetadata extends ReceiptMetadataBase {
+  raw_tokens: number;
+  sieved_tokens: number;
+  tax_savings_percentage: number;
+  policy_warnings: string[];
+  signature?: string;
+  public_key?: string;
+  sdk_timestamp?: string;
+  sdk_metadata?: Record<string, unknown>;
+}
+
+/**
+ * Forensic seal metadata union covering simulated and live SDK receipt envelopes.
+ */
+export type ReceiptMetadata = SimulatedSealMetadata | SdkReceiptMetadata;
+
+/**
+ * Type guard identifying live SDK telemetry receipt metadata.
+ *
+ * @param metadata - Receipt metadata payload from the backend.
+ * @returns `true` when the metadata includes sieve telemetry fields.
+ */
+export function isSdkReceiptMetadata(
+  metadata: ReceiptMetadata,
+): metadata is SdkReceiptMetadata {
+  return "raw_tokens" in metadata;
 }
 
 /**

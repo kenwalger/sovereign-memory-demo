@@ -20,7 +20,6 @@ class Record(Base):
     :ivar str provenance_json: JSON-encoded provenance metadata.
     :ivar str created_at: ISO-8601 UTC timestamp of record creation.
     :ivar Document document: Parent source document relationship.
-    :ivar list[Evidence] evidence_items: Evidence rows linked to this record.
     """
 
     __tablename__ = "records"
@@ -43,7 +42,3 @@ class Record(Base):
     )
 
     document: Mapped["Document"] = relationship(back_populates="records")
-    evidence_items: Mapped[list["Evidence"]] = relationship(
-        back_populates="record",
-        cascade="all, delete-orphan",
-    )

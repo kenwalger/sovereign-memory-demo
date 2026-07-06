@@ -1,6 +1,5 @@
 """SQLite engine and session factory for the memory store."""
 
-from collections.abc import Generator
 from pathlib import Path
 
 from sqlalchemy import Engine, create_engine
@@ -57,29 +56,3 @@ def init_schema(engine: Engine) -> None:
     :rtype: None
     """
     Base.metadata.create_all(engine)
-
-
-def session_scope(
-    session_factory: sessionmaker[Session],
-) -> Generator[Session]:
-    """Yield a transactional session that commits on success.
-
-    Rolls back the transaction and re-raises on any exception before closing
-    the session in a ``finally`` block.
-
-    :param sessionmaker[Session] session_factory: Factory used to create
-        database sessions.
-    :yields: Active SQLAlchemy session within a transaction boundary.
-    :rtype: Session
-    :raises Exception: Re-raises any exception raised during the yielded block
-        after rolling back the transaction.
-    """
-    session = session_factory()
-    try:
-        yield session
-        session.commit()
-    except Exception:
-        session.rollback()
-        raise
-    finally:
-        session.close()

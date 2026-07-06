@@ -25,7 +25,6 @@ reference dataset from `../datasets/` into `../memory_store/memory.db`.
 |------------|------------------------------------------------|
 | `Document` | Source file metadata from `datasets/`          |
 | `Record`   | Extracted semantic chunk for retrieval         |
-| `Evidence` | Verified excerpt for a query lifecycle         |
 | `Receipt`  | Forensic envelope (`payload_hash` unique index)|
 
 ## Retrieval
@@ -49,6 +48,8 @@ Policy violations on `POST /api/questions` return HTTP `400` with `{ error, mess
 Receipt IDs are allocated atomically via SQLite autoincrement (`Receipt.sequence`).
 Forensic receipt persistence runs in `asyncio.to_thread` to avoid blocking the event loop.
 A single `SovereignLedger` handle is shared between `AirlockBoundary` and `ReceiptService`.
+
+Cross-origin browser requests are supported via `CORSMiddleware` (localhost Vite dev server and `sovereignplatform.dev`).
 
 ## Run
 

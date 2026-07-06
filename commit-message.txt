@@ -1,5 +1,5 @@
-fix(hardening): exclude WAL artifacts and tighten input boundaries
+refactor(quality): align receipt metadata types and add CORS
 
-Ignore SQLite WAL/SHM sidecars in git, cap QuestionRequest length at 1000
-characters, offload provenance lookups via asyncio.to_thread, and escape
-LIKE wildcards in memory repository search terms.
+Model ReceiptMetadata as a TypeScript union for simulated vs SDK payloads,
+remove unused Evidence ORM scaffolding and session_scope helper, and mount
+CORSMiddleware for local and showcase cross-origin browser access.

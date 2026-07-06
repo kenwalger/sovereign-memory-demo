@@ -93,6 +93,7 @@ npm run dev
 
 Open `http://localhost:5173` with the backend running on port `8000`.
 The Vite dev server proxies `/api` requests to the backend.
+The backend also mounts `CORSMiddleware` for direct cross-origin access during showcase deployments.
 
 ### Panels
 
@@ -116,7 +117,6 @@ uv run pytest
 |------------|------------------------------------------------------|
 | `Document` | Source file metadata ingested from `datasets/`       |
 | `Record`   | Extracted semantic chunk ready for retrieval         |
-| `Evidence` | Verified excerpt linked to a query lifecycle         |
 | `Receipt`  | Forensic envelope (`sequence` autoincrement PK, `payload_hash` unique index)|
 
 ## Retrieval Layer

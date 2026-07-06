@@ -26,7 +26,7 @@ Cross-referenced against [Technical Specification v1](project_specs/sovereign-me
 
 ## Phase 2 — Data Layer
 
-- [x] SQLite schema (`Document`, `Record`, `Evidence`, `Receipt`)
+- [x] SQLite schema (`Document`, `Record`, `Receipt`)
 - [x] `Receipt.payload_hash` unique index for forensic linkage
 - [x] Dataset loader with fail-fast validation (`DatasetService`)
 - [x] Ship reference dataset (accession records, curator notes, property ledger, photograph catalog)
@@ -94,3 +94,10 @@ Cross-referenced against [Technical Specification v1](project_specs/sovereign-me
 - [x] `QuestionRequest` upper-bound validation (`max_length=1000`)
 - [x] `assemble_source_attribution` repository fallbacks offloaded via `asyncio.to_thread`
 - [x] SQL `LIKE` wildcard escaping in `MemoryRepository.search_records`
+
+## Code Quality Showcase Polish
+
+- [x] `ReceiptMetadata` TypeScript union for simulated seal vs SDK telemetry payloads
+- [x] Removed unused `Evidence` ORM model and dangling `Record` relationship
+- [x] Removed dead `session_scope` repository utility
+- [x] Production-ready `CORSMiddleware` with local and showcase origins

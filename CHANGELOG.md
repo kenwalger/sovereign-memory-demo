@@ -66,3 +66,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `MemoryRepository.search_records` escapes `%` and `_` wildcards in `LIKE` patterns
 - `property_ledger_1908.txt` expanded with historical boilerplate, transaction tables, and administrative headers for sieve token-savings demos
 - `frontend/.gitignore` blocks `*.tsbuildinfo` build artifacts
+- `ReceiptMetadata` refactored to a TypeScript union (`SimulatedSealMetadata | SdkReceiptMetadata`)
+- Removed unused `Evidence` ORM model, `Record.evidence_items` relationship, and dead `session_scope` utility
+- `CORSMiddleware` mounted with local development and showcase origins

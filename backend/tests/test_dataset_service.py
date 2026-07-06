@@ -160,12 +160,12 @@ async def test_file_reads_offload_to_worker_thread(
 
 
 def test_schema_creates_relational_tables(memory_store_path: Path) -> None:
-    """All four core entities are registered in the SQLite schema."""
+    """All core relational entities are registered in the SQLite schema."""
     engine = create_engine_for_path(memory_store_path)
     init_schema(engine)
     table_names = set(inspect(engine).get_table_names())
 
-    assert {"documents", "records", "evidence", "receipts"} <= table_names
+    assert {"documents", "records", "receipts"} <= table_names
 
 
 def test_receipt_payload_hash_has_unique_index(memory_store_path: Path) -> None:
