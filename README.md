@@ -135,8 +135,10 @@ Shipped under `datasets/`:
 
 - `accession_records.json`
 - `curator_notes.md`
-- `property_ledger_1908.txt`
+- `property_ledger_1908.txt` — verbose 1908 household ledger with real estate transaction tables and administrative boilerplate (ideal for Prose Tax token-savings demos)
 - `photograph_catalog.json`
+
+**Demo query for token optimization:** *"Summarize all real estate transactions and properties for the John Miller household in 1908"*
 
 ## Sovereign SDK Dependencies
 

@@ -132,6 +132,7 @@ class ReceiptService:
                 raise ReceiptDuplicateError(payload_hash) from exc
 
             session.refresh(receipt)
+            session.expunge(receipt)
             return receipt
 
     @staticmethod
@@ -252,24 +253,36 @@ class ReceiptService:
         """
         return f"FR-{sequence:04d}"
 
-    def retrieve_receipt(self, receipt_id: str) -> Receipt | None:
-        """Fetch a persisted receipt by its forensic identifier.
+    def retrieve_receipt(self, receipt_id: str) -> dict[str, Any] | None:
+        """Fetch a persisted receipt body by its forensic identifier.
 
-        :param str receipt_id: Primary key of the forensic receipt.
-        :returns: Matching receipt row, or ``None`` when not found.
-        :rtype: Receipt | None
+        The receipt JSON is materialized while the database session is active so
+        callers never touch a detached SQLAlchemy instance.
+
+        :param str receipt_id: Forensic receipt identifier (e.g. ``FR-0001``).
+        :returns: Parsed forensic receipt JSON body, or ``None`` when not found.
+        :rtype: dict[str, Any] | None
         """
         with self._session_factory() as session:
-            return session.scalar(select(Receipt).where(Receipt.id == receipt_id))
+            receipt = session.scalar(select(Receipt).where(Receipt.id == receipt_id))
+            if receipt is None:
+                return None
+            return json.loads(receipt.receipt_json)
 
-    def retrieve_receipt_by_payload_hash(self, payload_hash: str) -> Receipt | None:
-        """Fetch a persisted receipt by its deterministic payload hash.
+    def retrieve_receipt_by_payload_hash(self, payload_hash: str) -> dict[str, Any] | None:
+        """Fetch a persisted receipt body by its deterministic payload hash.
+
+        The receipt JSON is materialized while the database session is active so
+        callers never touch a detached SQLAlchemy instance.
 
         :param str payload_hash: SHA-256 digest of normalized evidence strings.
-        :returns: Matching receipt row, or ``None`` when not found.
-        :rtype: Receipt | None
+        :returns: Parsed forensic receipt JSON body, or ``None`` when not found.
+        :rtype: dict[str, Any] | None
         """
         with self._session_factory() as session:
-            return session.scalar(
+            receipt = session.scalar(
                 select(Receipt).where(Receipt.payload_hash == payload_hash)
             )
+            if receipt is None:
+                return None
+            return json.loads(receipt.receipt_json)

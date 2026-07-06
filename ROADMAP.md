@@ -84,3 +84,6 @@ Cross-referenced against [Technical Specification v1](project_specs/sovereign-me
 - [x] Singleton `SovereignLedger` handle injected into airlock boundary (no dual-writer leak)
 - [x] Frontend structured FastAPI error detail rendering (policy blocks and validation errors)
 - [x] Gitignore hardening for `*.db` / `*.sqlite3` artifacts
+- [x] Receipt retrieval materialized inside session boundary (fixes `DetachedInstanceError`)
+- [x] Expanded `property_ledger_1908.txt` boilerplate for Prose Tax token savings demo
+- [x] Frontend `*.tsbuildinfo` gitignore and artifact cleanup

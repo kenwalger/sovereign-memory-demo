@@ -119,14 +119,14 @@ async def get_receipt(
     :rtype: dict[str, Any]
     :raises HTTPException: With status 404 when the receipt does not exist.
     """
-    receipt = receipt_service.retrieve_receipt(receipt_id)
-    if receipt is None:
+    receipt_body = receipt_service.retrieve_receipt(receipt_id)
+    if receipt_body is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Receipt not found: {receipt_id}",
         )
 
-    return json.loads(receipt.receipt_json)
+    return receipt_body
 
 
 def _split_sieved_evidence(sieved_content: str) -> list[str]:
@@ -202,6 +202,6 @@ def _generate_or_fetch_receipt(
         existing = receipt_service.retrieve_receipt_by_payload_hash(exc.payload_hash)
         if existing is None:
             raise
-        receipt = existing
+        return existing
 
     return json.loads(receipt.receipt_json)

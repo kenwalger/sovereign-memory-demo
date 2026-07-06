@@ -1,5 +1,6 @@
-style(concurrency): offload sanitization and annotate AirlockResult
+fix(api): resolve DetachedInstanceError and expand token demo corpus
 
-Wrap MemoryService question sanitization in asyncio.to_thread per
-.cursorrules non-blocking invariants, and add an explicit AirlockResult
-type hint to the receipt generation route helper.
+Materialize receipt JSON inside the database session boundary, expunge
+generated receipt ORM instances safely, expand the 1908 property ledger
+with verbose boilerplate for sieve token savings, and ignore tsbuildinfo
+artifacts in the frontend workspace.

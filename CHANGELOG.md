@@ -53,9 +53,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Receipt ID race condition under concurrent requests (replaced `COUNT + 1` allocation)
 - Ledger file handle leak from duplicate `SovereignLedger` instantiation in `create_airlock_boundary`
 - Frontend `"[object Object]"` fallback when policy violation errors return structured `detail` objects
+- Receipt retrieval `DetachedInstanceError` on `GET /api/receipts/{id}` by materializing JSON inside the session boundary
+- Duplicate-hash receipt fallback now receives a parsed receipt body instead of a detached ORM instance
 
 ### Changed
 
 - `.gitignore` now blocks `*.db` and `*.sqlite3` repository-wide
 - `MemoryService.retrieve_context` offloads regex sanitization via `asyncio.to_thread`
 - `_generate_or_fetch_receipt` declares explicit `AirlockResult` parameter typing
+- `property_ledger_1908.txt` expanded with historical boilerplate, transaction tables, and administrative headers for sieve token-savings demos
+- `frontend/.gitignore` blocks `*.tsbuildinfo` build artifacts
