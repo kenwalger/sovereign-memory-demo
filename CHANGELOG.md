@@ -76,3 +76,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `MemoryRepository.search_records` ranks by keyword density instead of strict AND matching
 - `DatasetService.load_dataset` skips ingestion when documents already exist
 - Pinned `fastapi>=0.110.0`, `sqlalchemy>=2.0.0`, and `uvicorn>=0.30.0` dependency floors
+- Local demo fallback seeds `SOVEREIGN_NODE_SECRET` during application lifespan startup
+- `MemoryService` filters author signature and metadata profile tokens from search queries
+- Context-aware mock answers for real estate and transaction demo queries
+- Receipt lookup and duplicate-hash fallback queries offloaded via `asyncio.to_thread`
+- `DatasetService.count_persisted_records` uses native SQL `COUNT(*)` aggregation
+- Frontend `formatErrorDetail` consolidates structured policy error unpacking

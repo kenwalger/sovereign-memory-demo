@@ -4,6 +4,7 @@ Exposes the ASGI application, startup lifecycle hooks that initialize the
 memory store and ingest datasets, and a lightweight health-check endpoint.
 """
 
+import os
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
@@ -30,6 +31,22 @@ from app.services.dataset_service import DatasetService
 from app.services.memory_service import MemoryService
 from app.services.receipt_service import ReceiptService
 
+DEFAULT_SOVEREIGN_NODE_SECRET = "demo-local-sovereign-node-secret-key-2026"
+"""str: Local demo fallback for ``SOVEREIGN_NODE_SECRET`` when unset in the host environment."""
+
+
+def _ensure_sovereign_node_secret() -> None:
+    """Seed ``SOVEREIGN_NODE_SECRET`` for local SDK cryptographic initialization.
+
+    Silences sovereign-sdk startup warnings when the host environment does not
+    provide a node secret. Production deployments should set the variable explicitly.
+
+    :returns: None
+    :rtype: None
+    """
+    if not os.environ.get("SOVEREIGN_NODE_SECRET"):
+        os.environ["SOVEREIGN_NODE_SECRET"] = DEFAULT_SOVEREIGN_NODE_SECRET
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
@@ -44,6 +61,8 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     :yields: None
     :rtype: None
     """
+    _ensure_sovereign_node_secret()
+
     engine = create_engine_for_path(MEMORY_STORE_PATH)
     init_schema(engine)
     session_factory = create_session_factory(engine)

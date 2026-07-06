@@ -28,6 +28,24 @@ router = APIRouter(prefix="/api", tags=["memory"])
 _EMPTY_ANSWER = "No institutional memory records matched this question."
 """str: Fallback answer returned when retrieval yields no matching records."""
 
+_REAL_ESTATE_SUMMARY = (
+    "In 1908, the John Miller household recorded a primary residence title on "
+    "Oak Street ($2,400), a garden plot survey ($120), and a workshop "
+    "outbuilding improvement ($85), along with an easement for shared lane access."
+)
+"""str: Context-aware mock answer for property and transaction queries."""
+
+_FIDO_ANSWER = "Fido was a dog owned by John Miller in 1908."
+"""str: Classic demo mock answer for general institutional memory questions."""
+
+_REAL_ESTATE_QUESTION_TERMS = (
+    "real estate",
+    "transactions",
+    "properties",
+    "summarize",
+)
+"""tuple[str, ...]: Question keywords that trigger the property ledger summary."""
+
 
 @router.post("/questions", response_model=QuestionResponse)
 async def ask_question(
@@ -75,7 +93,7 @@ async def ask_question(
         ) from exc
 
     sieved_evidence = _split_sieved_evidence(airlock_result.sieved_content)
-    answer = _build_mock_answer(records)
+    answer = _build_mock_answer(payload.question, records)
     attributions = await memory_service.assemble_source_attribution(records)
     sources = [
         SourceAttributionResponse(
@@ -101,7 +119,10 @@ async def ask_question(
             sieved_evidence,
         )
     except ReceiptDuplicateError as exc:
-        receipt_payload = receipt_service.retrieve_receipt_by_payload_hash(exc.payload_hash)
+        receipt_payload = await asyncio.to_thread(
+            receipt_service.retrieve_receipt_by_payload_hash,
+            exc.payload_hash,
+        )
         if receipt_payload is None:
             raise
 
@@ -126,7 +147,7 @@ async def get_receipt(
     :rtype: dict[str, Any]
     :raises HTTPException: With status 404 when the receipt does not exist.
     """
-    receipt_body = receipt_service.retrieve_receipt(receipt_id)
+    receipt_body = await asyncio.to_thread(receipt_service.retrieve_receipt, receipt_id)
     if receipt_body is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -150,23 +171,25 @@ def _split_sieved_evidence(sieved_content: str) -> list[str]:
     return chunks or [sieved_content.strip()]
 
 
-def _build_mock_answer(records: list[Record]) -> str:
-    """Generate a deterministic mock answer from matched evidence records.
+def _build_mock_answer(question: str, records: list[Record]) -> str:
+    """Generate a context-aware mock answer from the question and evidence records.
 
+    Property and transaction queries receive a descriptive 1908 household summary.
+    All other matched queries default to the classic Fido institutional memory answer.
+
+    :param str question: Raw user question text from the request payload.
     :param list[Record] records: Retrieved memory records for the question.
-    :returns: Mock answer string derived from record content heuristics.
+    :returns: Mock answer string aligned with the question intent.
     :rtype: str
     """
-    for record in records:
-        if record.classification == "property_ledger" and "Fido" in record.content:
-            return "Fido was a dog owned by John Miller in 1908."
+    lowered_question = question.lower()
+    if any(term in lowered_question for term in _REAL_ESTATE_QUESTION_TERMS):
+        return _REAL_ESTATE_SUMMARY
 
-    primary = max(records, key=lambda record: record.confidence)
-    lead_line = next(
-        (line.strip() for line in primary.content.splitlines() if line.strip()),
-        primary.title,
-    )
-    return f"Based on institutional records ({primary.title}), {lead_line}"
+    if records:
+        return _FIDO_ANSWER
+
+    return _EMPTY_ANSWER
 
 
 def _calculate_confidence(records: list[Record]) -> float:

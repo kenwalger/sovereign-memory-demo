@@ -67,13 +67,13 @@ function formatErrorDetail(detail: unknown): string {
       const warnings = Array.isArray(record.warnings)
         ? record.warnings.map(String)
         : [];
+      const prefix =
+        typeof record.error === "string" ? `${record.error}: ` : "";
+      const message = `${prefix}${record.message}`;
       if (warnings.length > 0) {
-        return `${record.message} Warnings: ${warnings.join("; ")}`;
+        return `${message} Warnings: ${warnings.join("; ")}`;
       }
-      return record.message;
-    }
-    if (typeof record.error === "string" && typeof record.message === "string") {
-      return `${record.error}: ${record.message}`;
+      return message;
     }
     return JSON.stringify(detail);
   }

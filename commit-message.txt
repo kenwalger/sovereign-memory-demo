@@ -1,5 +1,5 @@
-fix(api): harden question lifecycle routing and search recall
+feat(api): add context-aware answers and complete I/O offloading
 
-Skip airlock on empty retrieval, catch duplicate receipts at the route layer,
-rank search results by keyword density, make dataset ingestion idempotent, and
-pin core FastAPI/SQLAlchemy/Uvicorn dependency floors.
+Serve property-transaction mock summaries from question keywords, thread-offload
+all receipt database reads, optimize record count aggregation, and simplify
+frontend structured error unpacking while preserving SOVEREIGN_NODE_SECRET defaults.

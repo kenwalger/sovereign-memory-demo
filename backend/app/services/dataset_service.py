@@ -377,4 +377,4 @@ class DatasetService:
         :rtype: int
         """
         with self._session_factory() as session:
-            return len(session.scalars(select(Record)).all())
+            return session.scalar(select(func.count()).select_from(Record)) or 0

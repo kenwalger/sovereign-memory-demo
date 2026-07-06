@@ -109,3 +109,11 @@ Cross-referenced against [Technical Specification v1](project_specs/sovereign-me
 - [x] Core dependency version floors (`fastapi`, `sqlalchemy`, `uvicorn`)
 - [x] Keyword-density search recall with repository stop-word filtering
 - [x] Idempotent dataset ingestion skips reload when documents exist
+
+## Final Definitive Hardening
+
+- [x] Context-aware mock answers for property and transaction queries
+- [x] All receipt lookup I/O offloaded via `asyncio.to_thread` in API routes
+- [x] `count_persisted_records` uses SQL `COUNT(*)` aggregation
+- [x] Frontend `formatErrorDetail` unreachable branch cleanup
+- [x] `SOVEREIGN_NODE_SECRET` local demo fallback preserved in lifespan startup

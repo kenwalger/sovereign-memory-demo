@@ -12,6 +12,21 @@ from app.repositories.memory_repository import MemoryRepository
 DEFAULT_RETRIEVAL_LIMIT = 3
 """int: Default maximum number of memory records returned per retrieval query."""
 _SANITIZE_PATTERN = re.compile(r"[^a-zA-Z0-9\s]+")
+_METADATA_LINE_PATTERN = re.compile(
+    r"^\s*(?:copyright|author|signed by|curated by|metadata)\b.*$",
+    re.IGNORECASE | re.MULTILINE,
+)
+_METADATA_SIGNATURE_TERMS = frozenset({
+    "alger",
+    "author",
+    "copyright",
+    "ken",
+    "kenal",
+    "metadata",
+    "profile",
+    "signed",
+    "system",
+})
 _STOP_WORDS = frozenset({
     "a",
     "about",
@@ -165,17 +180,21 @@ class MemoryService:
     def _sanitize_question(question: str) -> str:
         """Normalize a user question into lowercase search terms.
 
-        Strips non-alphanumeric characters, lowercases tokens, and removes
-        common stop words.
+        Strips metadata signature lines, non-alphanumeric characters, and removes
+        common stop words plus author or system profile tokens that should not
+        intersect with institutional memory content.
 
         :param str question: Raw user question text.
         :returns: Space-joined search terms suitable for repository lookup.
         :rtype: str
         """
-        normalized = _SANITIZE_PATTERN.sub(" ", question)
+        without_metadata_lines = _METADATA_LINE_PATTERN.sub(" ", question)
+        normalized = _SANITIZE_PATTERN.sub(" ", without_metadata_lines)
         terms = [
             term
             for term in normalized.lower().split()
-            if term and term not in _STOP_WORDS
+            if term
+            and term not in _STOP_WORDS
+            and term not in _METADATA_SIGNATURE_TERMS
         ]
         return " ".join(terms)
