@@ -79,7 +79,6 @@ class ReceiptService:
             payload_hash = airlock_result.telemetry.payload_hash
             forensic_metadata = self._build_sdk_metadata(airlock_result)
             ledger_reference = forensic_metadata["ledger_reference"]
-            self._commit_to_ledger(airlock_result)
         else:
             payload_hash = compute_payload_hash(evidence_strings)
             forensic_metadata = None
@@ -133,7 +132,11 @@ class ReceiptService:
 
             session.refresh(receipt)
             session.expunge(receipt)
-            return receipt
+
+        if airlock_result is not None:
+            self._commit_to_ledger(airlock_result)
+
+        return receipt
 
     @staticmethod
     def _build_sdk_metadata(airlock_result: AirlockResult) -> dict[str, Any]:

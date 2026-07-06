@@ -85,7 +85,10 @@ Receipt IDs are allocated atomically via SQLite autoincrement (`Receipt.sequence
 Forensic receipt persistence runs in `asyncio.to_thread` to avoid blocking the event loop.
 A single `SovereignLedger` handle is shared between `AirlockBoundary` and `ReceiptService`.
 
-Cross-origin browser requests are supported via `CORSMiddleware` (localhost Vite dev server and `sovereignplatform.dev`).
+Cross-origin browser requests are supported via `CORSMiddleware`. Local Vite
+dev hosts are always allowed; production origins are read from
+`SOVEREIGN_ALLOWED_ORIGINS` (comma-separated, default
+`https://demo.sovereignsystems.io`).
 
 ## Test
 

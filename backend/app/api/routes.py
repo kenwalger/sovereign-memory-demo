@@ -18,7 +18,7 @@ from app.api.schemas import QuestionRequest, QuestionResponse, SourceAttribution
 from app.models import Record
 from app.receipts import build_evidence_strings
 from app.sdk.boundary import OutboundContextProcessor
-from app.services.exceptions import ReceiptDuplicateError
+from app.services.exceptions import ReceiptDuplicateError, ReceiptValidationError
 from app.services.memory_service import MemoryService
 from app.services.receipt_service import ReceiptService
 
@@ -66,7 +66,9 @@ async def ask_question(
     :param OutboundContextProcessor outbound_processor: SDK outbound processor.
     :returns: Answer text, evidence strings, source attributions, and receipt.
     :rtype: QuestionResponse
-    :raises HTTPException: With status 400 when airlock policy blocks the payload.
+    :raises HTTPException: With status 400 when airlock policy blocks the payload,
+        409 when a duplicate receipt hash cannot be resolved, or 422 when receipt
+        validation fails.
     """
     records = await memory_service.retrieve_context(payload.question)
 
@@ -124,7 +126,25 @@ async def ask_question(
             exc.payload_hash,
         )
         if receipt_payload is None:
-            raise
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail={
+                    "error": "receipt_duplicate_unresolved",
+                    "message": (
+                        "Receipt payload hash already exists but no stored "
+                        "record was found."
+                    ),
+                    "payload_hash": exc.payload_hash,
+                },
+            ) from exc
+    except ReceiptValidationError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail={
+                "error": "receipt_validation_failed",
+                "message": exc.detail,
+            },
+        ) from exc
 
     return QuestionResponse(
         answer=answer,
@@ -196,9 +216,13 @@ def _calculate_confidence(records: list[Record]) -> float:
     """Average record confidence for the matched evidence set.
 
     :param list[Record] records: Retrieved memory records for the question.
-    :returns: Mean confidence rounded to two decimal places.
+    :returns: Mean confidence rounded to two decimal places, or ``0.0`` when
+        the record collection is empty.
     :rtype: float
     """
+    if not records:
+        return 0.0
+
     return round(sum(record.confidence for record in records) / len(records), 2)
 
 

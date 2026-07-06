@@ -129,3 +129,11 @@ Cross-referenced against [Technical Specification v1](project_specs/sovereign-me
 
 - [x] Dataset ingestion lifecycle offloaded via `asyncio.to_thread` at startup
 - [x] `CORSMiddleware` restricted to explicit methods and headers with credentials
+
+## Phase 9 — Transactional Robustness
+
+- [x] SQLite receipt persistence commits before sovereign ledger `append_receipt`
+- [x] Route-level `ReceiptDuplicateError` fallback with HTTP 409 when unresolved
+- [x] Route-level `ReceiptValidationError` mapped to HTTP 422
+- [x] Production CORS origins externalized via `SOVEREIGN_ALLOWED_ORIGINS`
+- [x] `_calculate_confidence` empty-collection guard returns `0.0`

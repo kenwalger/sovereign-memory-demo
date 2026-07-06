@@ -106,6 +106,30 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     engine.dispose()
 
 
+def _resolve_allowed_origins() -> list[str]:
+    """Build the CORS allow-list from local dev hosts and configured production origins.
+
+    :returns: Distinct origin URLs permitted for cross-origin browser access.
+    :rtype: list[str]
+    """
+    local_origins = [
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+    ]
+    configured_origins = os.environ.get(
+        "SOVEREIGN_ALLOWED_ORIGINS",
+        "https://demo.sovereignsystems.io",
+    )
+    production_origins = [
+        origin.strip()
+        for origin in configured_origins.split(",")
+        if origin.strip()
+    ]
+    return local_origins + production_origins
+
+
 app = FastAPI(
     title="Sovereign Memory Demo",
     description=(
@@ -118,13 +142,7 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5173",
-        "http://127.0.0.1:5173",
-        "http://localhost:3000",
-        "http://127.0.0.1:3000",
-        "https://sovereignplatform.dev",
-    ],
+    allow_origins=_resolve_allowed_origins(),
     allow_credentials=True,
     allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["Content-Type", "Authorization"],

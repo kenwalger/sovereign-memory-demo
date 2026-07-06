@@ -87,6 +87,10 @@ cd backend
 SOVEREIGN_NODE_SECRET="your-secret-key" uv run uvicorn main:app --reload --port 8000
 ```
 
+**Optional:** `SOVEREIGN_ALLOWED_ORIGINS` configures production CORS origins
+(comma-separated). Defaults to `https://demo.sovereignsystems.io`. Local Vite
+dev hosts are always permitted.
+
 On startup the backend initializes the SQLite schema and ingests the
 reference dataset from `datasets/` into `memory_store/memory.db`.
 Cryptographic identity keys under `memory_store/.sovereign_keys/` are gitignored and must never be committed.

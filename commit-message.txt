@@ -1,5 +1,5 @@
-fix(startup): offload dataset ingestion and tighten CORS policy
+fix(api): correct ledger commit order and harden route error traps
 
-Run initialize_datasets on a worker thread during lifespan bootstrap and
-restrict CORSMiddleware to explicit methods and headers while preserving
-local showcase origin mappings.
+Persist forensic receipts to SQLite before sovereign ledger commits,
+map duplicate and validation receipt errors to structured HTTP responses,
+externalize production CORS origins, and guard empty confidence calculations.

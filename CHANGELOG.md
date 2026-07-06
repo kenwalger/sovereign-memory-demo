@@ -55,6 +55,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Frontend `"[object Object]"` fallback when policy violation errors return structured `detail` objects
 - Receipt retrieval `DetachedInstanceError` on `GET /api/receipts/{id}` by materializing JSON inside the session boundary
 - Duplicate-hash receipt fallback now receives a parsed receipt body instead of a detached ORM instance
+- Orphaned sovereign ledger commits when SQLite receipt persistence fails or collides
 - Question lifecycle 500s from unhandled duplicate receipts and unnecessary airlock passes on empty retrieval
 - Complex query recall failures from strict AND keyword matching across long questions
 - Tracked `.sovereign_keys` identity material removed from Git index; cryptographic paths now gitignored
@@ -91,3 +92,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Frontend `formatErrorDetail` consolidates structured policy error unpacking
 - `DatasetService.initialize_datasets` offloads blocking ingestion via `asyncio.to_thread`
 - `CORSMiddleware` uses explicit `GET`/`POST`/`OPTIONS` methods and `Content-Type`/`Authorization` headers
+- SQLite receipt persistence commits before sovereign ledger `append_receipt`
+- `POST /api/questions` maps `ReceiptDuplicateError` unresolved fallbacks to HTTP 409 and `ReceiptValidationError` to HTTP 422
+- Production CORS origins externalized via `SOVEREIGN_ALLOWED_ORIGINS` environment variable
+- `_calculate_confidence` returns `0.0` for empty record collections
