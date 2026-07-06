@@ -1,0 +1,75 @@
+@import "./styles/handbook-tokens.css";
+
+:root {
+  color: var(--sovereign-text-on-dark);
+  font-family: var(--font-myriad);
+  font-size: var(--sovereign-body-size);
+  line-height: var(--sovereign-body-leading);
+  font-weight: var(--sovereign-body-weight);
+  background: var(--sovereign-bg-obsidian);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--sovereign-bg-obsidian);
+}
+
+button,
+textarea {
+  font: inherit;
+}
+
+.sovereign-heading-1 {
+  font-family: var(--font-myriad);
+  font-size: var(--sovereign-h1-size);
+  font-weight: var(--sovereign-h1-weight);
+  line-height: var(--sovereign-h1-leading);
+}
+
+.sovereign-heading-2 {
+  font-family: var(--font-myriad);
+  font-size: var(--sovereign-h2-size);
+  font-weight: var(--sovereign-h2-weight);
+  line-height: var(--sovereign-h2-leading);
+}
+
+.sovereign-subtitle {
+  font-family: var(--font-myriad);
+  font-size: var(--sovereign-subtitle-size);
+  font-style: italic;
+  font-weight: var(--sovereign-subtitle-weight);
+  line-height: var(--sovereign-subtitle-leading);
+}
+
+.sovereign-body-serif {
+  font-family: var(--font-minion);
+  font-size: var(--sovereign-body-size);
+  font-weight: var(--sovereign-body-weight);
+  line-height: var(--sovereign-body-leading);
+}
+
+.code-frame {
+  background: var(--sovereign-code-frame-bg);
+  border: 1pt solid var(--sovereign-code-frame-border);
+  color: var(--sovereign-text-on-light);
+  font-family: var(--font-source-code);
+  font-size: var(--sovereign-code-size);
+  hyphens: none;
+  -webkit-hyphens: none;
+  line-height: var(--sovereign-code-leading);
+  margin: 0;
+  overflow: auto;
+  padding: var(--sovereign-code-padding);
+  white-space: pre-wrap;
+  word-break: normal;
+  overflow-wrap: anywhere;
+}

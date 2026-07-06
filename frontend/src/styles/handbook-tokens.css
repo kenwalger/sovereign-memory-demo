@@ -1,0 +1,55 @@
+/**
+ * Sovereign Systems Specification Handbook design tokens.
+ *
+ * Maps official typographic and color specifications to CSS custom properties
+ * for use across the demo frontend theme.
+ */
+:root {
+  /* Base color system */
+  --sovereign-matrix-blue: #378add;
+  --sovereign-alert-amber: #ba7517;
+  --sovereign-resolution-teal: #1d9e75;
+  --sovereign-bg-obsidian: #121214;
+  --sovereign-bg-panel: #1a1c1f;
+  --sovereign-code-frame-bg: #f5f5f5;
+  --sovereign-code-frame-border: #dddddd;
+  --sovereign-code-commentary: #6a737d;
+  --sovereign-text-on-dark: #e8eaed;
+  --sovereign-text-muted-on-dark: #9aa3ad;
+  --sovereign-text-on-light: #24292e;
+
+  /* Font stacks */
+  --font-myriad: "Myriad Pro", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-minion: "Minion Pro", Georgia, "Times New Roman", serif;
+  --font-source-code: "Source Code Pro", Consolas, "Courier New", monospace;
+
+  /* Heading 1 — page titles */
+  --sovereign-h1-size: 24pt;
+  --sovereign-h1-leading: 28pt;
+  --sovereign-h1-weight: 700;
+
+  /* Heading 2 — section titles */
+  --sovereign-h2-size: 16pt;
+  --sovereign-h2-leading: 20pt;
+  --sovereign-h2-weight: 600;
+
+  /* Panel / table headers */
+  --sovereign-panel-header-size: 9pt;
+  --sovereign-panel-header-leading: 13pt;
+  --sovereign-panel-header-weight: 700;
+
+  /* Subtitles / character text */
+  --sovereign-subtitle-size: 13pt;
+  --sovereign-subtitle-leading: 17pt;
+  --sovereign-subtitle-weight: 300;
+
+  /* Raw content / table body */
+  --sovereign-body-size: 9.5pt;
+  --sovereign-body-leading: 13pt;
+  --sovereign-body-weight: 400;
+
+  /* Code frame technical blocks */
+  --sovereign-code-size: 8.5pt;
+  --sovereign-code-leading: 13pt;
+  --sovereign-code-padding: 8pt;
+}

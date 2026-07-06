@@ -1,6 +1,5 @@
-feat(scaffold): initialize Step 1 workspace with uv and health API
+fix(backend): close concurrency loops and harden secret validation
 
-Establish Python 3.14+ backend with hatchling pyproject.toml, uv lockfile
-workflow, Sovereign SDK dependencies, FastAPI /api/health endpoint, and
-async pytest integration test. Add directory topography and tracking docs
-per technical specification v1.
+Wrap receipt flush and commit in IntegrityError handling, eager-load
+dataset document records to prevent detachment, and reject blank
+SOVEREIGN_NODE_SECRET values at startup.

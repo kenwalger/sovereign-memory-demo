@@ -200,12 +200,26 @@ cover/
 local_settings.py
 db.sqlite3
 db.sqlite3-journal
+*.db
+*.sqlite3
+*.db-shm
+*.db-wal
+*.sqlite3-shm
+*.sqlite3-wal
 
 # Sovereign Memory Demo local SQLite footprint
 memory_store/*.db
 memory_store/*.db-journal
+memory_store/*.db-shm
+memory_store/*.db-wal
 memory_store/*.sqlite
 memory_store/*.sqlite3
+memory_store/*.sqlite3-shm
+memory_store/*.sqlite3-wal
+
+# Sovereign SDK cryptographic identity material (never commit)
+**/.sovereign_keys/
+*.pem
 
 # Flask stuff:
 instance/

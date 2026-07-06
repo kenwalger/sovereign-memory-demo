@@ -1,0 +1,59 @@
+================================================================================
+OFFICIAL MUNICIPAL PROPERTY REGISTER — BUREAU OF RECORDS AND ESTATE ADMINISTRATION
+================================================================================
+Form No. 1908-PR-001 | Revision 3 | Printed for Internal Use Only
+Department of Municipal Archives | County Registry Office | Page 1 of 1
+================================================================================
+NOTICE: This ledger constitutes the authoritative household property record for
+the calendar year 1908. All real estate transactions, chattel holdings, and
+personal property declarations must be recorded below in duplicate triplicate.
+================================================================================
+
+Miller Household Property Ledger
+John Miller Household — Real Estate and Personal Property Summary
+Reporting Year: 1908
+
+================================================================================
+SECTION I — REAL ESTATE TRANSACTIONS AND PROPERTIES (JOHN MILLER HOUSEHOLD)
+================================================================================
+| Parcel ID | Property Description              | Transaction Type | Amount   |
+|-----------|-----------------------------------|------------------|----------|
+| RE-1908-01| Primary Residence, Oak Street     | Title Recorded   | $2,400   |
+| RE-1908-02| Garden Plot, rear boundary        | Survey Filed     | $120     |
+| RE-1908-03| Workshop outbuilding              | Improvement Log  | $85      |
+| RE-1908-04| Shared lane access easement       | Municipal Filing | $0       |
+
+Real estate transactions for the John Miller household in 1908 include the
+recorded title for the primary residence, a filed survey for the garden plot,
+logged improvements to the workshop outbuilding, and a municipal easement
+filing for shared lane access. Properties held under the household name were
+reviewed quarterly by the Bureau of Records.
+
+================================================================================
+SECTION II — PERSONAL PROPERTY AND HOUSEHOLD CHATTEL REGISTER
+================================================================================
+| Item ID   | Description                       | Classification   | Value    |
+|-----------|-----------------------------------|------------------|----------|
+| CH-1908-01| Marble Bust (commissioned)        | Art Object       | $45      |
+| CH-1908-02| Writing desk and correspondence   | Furnishing       | $18      |
+| CH-1908-03| Household linens and textiles     | Domestic Goods   | $12      |
+
+Marble Bust commissioned from local sculptor.
+
+================================================================================
+SECTION III — LIVESTOCK AND COMPANION ANIMALS
+================================================================================
+Dog: Fido
+Breed: Mixed Terrier
+Owner: John Miller
+
+================================================================================
+ADMINISTRATIVE FOOTER — REPEATED RECORDS NOTICE
+================================================================================
+Bureau of Records and Estate Administration | Form 1908-PR-001 | Page Footer
+All real estate transactions and properties listed herein pertain to the John
+Miller household for the year 1908. Summarize requests must reference parcel
+identifiers and transaction types recorded in Section I above.
+================================================================================
+END OF LEDGER — MILLER HOUSEHOLD PROPERTY REGISTER — 1908
+================================================================================

@@ -9,9 +9,102 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Atomic receipt ID allocation using SQLite autoincrement `sequence` primary key on `Receipt`
+- Non-blocking forensic receipt persistence via `asyncio.to_thread` in `POST /api/questions`
+- Shared `SovereignLedger` handle injected into `AirlockBoundary` (eliminates dual-writer file locks)
+- Frontend `formatErrorDetail` helper for structured FastAPI `detail` payloads (policy blocks, 422 validation)
+- Sovereign SDK integration: `OutboundContextProcessor` wires sieve + airlock into `POST /api/questions`
+- `backend/config/airlock_policy.yaml` deny rules for API keys and private key material
+- `ReceiptService` ledger commits via `sovereign-sdk-ledger` with SDK telemetry metadata
+- Policy-blocked responses return HTTP 400 with `{ error, message, warnings }` envelope
+- Integration test for airlock policy rejection (`test_post_questions_policy_violation_returns_structured_400`)
+- React + Vite frontend with quad-panel UI (`QuestionPanel`, `AnswerPanel`, `EvidencePanel`, `ReceiptPanel`)
+- TypeScript API contracts and `frontend/src/services/api.ts` fetch client with TSDoc
+- Comprehensive Sphinx-style docstrings across backend modules per `.cursorrules`
+- Comprehensive TSDoc comments across frontend types, services, and components
+- FastAPI API router with `POST /api/questions` and `GET /api/receipts/{receipt_id}`
+- Unified question response contract: `answer`, `evidence`, `sources`, `receipt`
+- `ReceiptService.retrieve_receipt` and `retrieve_receipt_by_payload_hash` lookup methods
+- Integration test suite `backend/tests/test_api_routes.py` (6 HTTP lifecycle tests)
+- `ReceiptService.generate_forensic_receipt` with deterministic SHA-256 payload hashing
+- Forensic seal simulation (`app/receipts/seal.py`) mapping pre-sieve hash into signed metadata
+- `ReceiptDuplicateError` guard against unique `payload_hash` index violations
+- Unit test suite `backend/tests/test_receipt_service.py` (7 receipt lifecycle tests)
+- `MemoryRepository` with keyword search and document lookup (`search_records`, `get_document_by_id`)
+- `MemoryService` async retrieval orchestration (`retrieve_context`, `assemble_source_attribution`)
+- `SourceAttribution` provenance dataclass mapping records to parent documents
+- Unit test suite `backend/tests/test_memory_service.py` (10 retrieval and attribution tests)
+- MIT `LICENSE`, `CONTRIBUTING.md`, and `SECURITY.md` open-source governance scaffolding
+- SQLAlchemy 2.0 relational models: `Document`, `Record`, `Evidence`, `Receipt`
+- Unique index on `Receipt.payload_hash` for forensic cryptographic linkage
+- `DatasetService` fail-fast ingestion engine with typed initialization errors
+- Startup dataset load via FastAPI lifespan hook (`datasets/` → `memory_store/`)
+- Reference demo dataset shipped under `datasets/` (accession, curator notes, ledger, photographs)
+- Unit test suite `backend/tests/test_dataset_service.py` (11 ingestion and schema tests)
 - Repository directory topography: `datasets/`, `memory_store/`, `backend/app/*`, `frontend/src/*`
 - `backend/pyproject.toml` with Python 3.14+ target, hatchling build backend, and Sovereign SDK dependencies
 - `uv` lockfile workflow (`backend/uv.lock`, `backend/.python-version`, `[dependency-groups]`)
 - FastAPI application entrypoint (`backend/main.py`) with `GET /api/health` checkpoint
 - Async health route integration test (`backend/tests/test_main.py`) using pytest and httpx
 - Project tracking documents: `README.md`, `CHANGELOG.md`, `ROADMAP.md`
+
+### Fixed
+
+- Receipt ID race condition under concurrent requests (replaced `COUNT + 1` allocation)
+- Ledger file handle leak from duplicate `SovereignLedger` instantiation in `create_airlock_boundary`
+- Frontend `"[object Object]"` fallback when policy violation errors return structured `detail` objects
+- Receipt retrieval `DetachedInstanceError` on `GET /api/receipts/{id}` by materializing JSON inside the session boundary
+- Duplicate-hash receipt fallback now receives a parsed receipt body instead of a detached ORM instance
+- Orphaned sovereign ledger commits when SQLite receipt persistence fails or collides
+- Question lifecycle 500s from unhandled duplicate receipts and unnecessary airlock passes on empty retrieval
+- Complex query recall failures from strict AND keyword matching across long questions
+- Tracked `.sovereign_keys` identity material removed from Git index; cryptographic paths now gitignored
+- CORS localhost origins no longer injected when `SOVEREIGN_ALLOWED_ORIGINS` is absent; require `SOVEREIGN_ENV=development`
+- Removed unreachable empty-records branch from `_build_mock_answer`
+- Restored `system` as a searchable keyword by removing it from author signature stop words
+- Flush-time `IntegrityError` on receipt `payload_hash` collisions mapped to `ReceiptDuplicateError`
+- `_load_existing_documents` eager-loads and expunges `Document.records` to prevent detachment errors
+- `SOVEREIGN_NODE_SECRET` validation rejects whitespace-only environment values
+
+### Security
+
+- Removed hardcoded `SOVEREIGN_NODE_SECRET` fallback; startup now fails fast when unset
+- Added global `.gitignore` rules for `**/.sovereign_keys/` and `*.pem`
+- Shared `content_filters` strips creator attribution from ingestion and search token maps
+- Documented cross-platform `SOVEREIGN_NODE_SECRET` setup for Windows PowerShell and Unix shells
+
+### Changed
+
+- `.gitignore` now blocks `*.db`, `*.sqlite3`, and SQLite WAL/SHM sidecars (`*.db-shm`, `*.db-wal`, `*.sqlite3-shm`, `*.sqlite3-wal`) repository-wide
+- `MemoryService.retrieve_context` offloads regex sanitization via `asyncio.to_thread`
+- `MemoryService.assemble_source_attribution` offloads repository fallback lookups via `asyncio.to_thread`
+- `_generate_or_fetch_receipt` declares explicit `AirlockResult` parameter typing
+- `QuestionRequest.question` bounded to `max_length=1000` characters
+- `MemoryRepository.search_records` escapes `%` and `_` wildcards in `LIKE` patterns
+- `property_ledger_1908.txt` expanded with historical boilerplate, transaction tables, and administrative headers for sieve token-savings demos
+- `frontend/.gitignore` blocks `*.tsbuildinfo` build artifacts
+- `ReceiptMetadata` refactored to a TypeScript union (`SimulatedSealMetadata | SdkReceiptMetadata`)
+- Removed unused `Evidence` ORM model, `Record.evidence_items` relationship, and dead `session_scope` utility
+- `CORSMiddleware` mounted with local development and showcase origins
+- `POST /api/questions` skips airlock when retrieval returns no records
+- `ReceiptDuplicateError` handled at the route layer with existing receipt fallback
+- `MemoryRepository.search_records` ranks by keyword density instead of strict AND matching
+- `DatasetService.load_dataset` skips ingestion when documents already exist
+- Pinned `fastapi>=0.110.0`, `sqlalchemy>=2.0.0`, and `uvicorn>=0.30.0` dependency floors
+- `MemoryService` filters author signature and metadata profile tokens from search queries
+- Context-aware mock answers for real estate and transaction demo queries
+- Receipt lookup and duplicate-hash fallback queries offloaded via `asyncio.to_thread`
+- `DatasetService.count_persisted_records` uses native SQL `COUNT(*)` aggregation
+- Frontend `formatErrorDetail` consolidates structured policy error unpacking
+- `DatasetService.initialize_datasets` offloads blocking ingestion via `asyncio.to_thread`
+- `CORSMiddleware` uses explicit `GET`/`POST`/`OPTIONS` methods and `Content-Type`/`Authorization` headers
+- SQLite receipt persistence commits before sovereign ledger `append_receipt`
+- `POST /api/questions` maps `ReceiptDuplicateError` unresolved fallbacks to HTTP 409 and `ReceiptValidationError` to HTTP 422
+- Production CORS origins externalized via `SOVEREIGN_ALLOWED_ORIGINS` environment variable
+- `_calculate_confidence` returns `0.0` for empty record collections
+- Frontend aligned to Sovereign Systems terminal palette (obsidian, steel, amber/gold)
+- Primary UI header and philosophical tagline updated per brand specification
+- `SOVEREIGN_ENV` gates localhost CORS origins; production deployments lock to configured domains
+- Dataset ingestion decodes UTF-8 before author-footer sanitization and JSON parsing
+- Handbook typography synchronized: Myriad Pro hierarchy, Minion Pro body, Source Code Pro code frames (`24pt`/`16pt`/`9pt`/`13pt`/`9.5pt`/`8.5pt`)
+- Official palette tokens applied (`#378ADD` matrix blue, `#BA7517` alert amber, `#1D9E75` resolution teal, `#F5F5F5` code frames)

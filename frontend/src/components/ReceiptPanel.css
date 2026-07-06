@@ -1,0 +1,41 @@
+.receipt-view__summary {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  margin: 0 0 1rem;
+}
+
+.receipt-view__summary dt {
+  color: var(--sovereign-code-commentary);
+  font-family: var(--font-myriad);
+  font-size: var(--sovereign-panel-header-size);
+  font-weight: var(--sovereign-panel-header-weight);
+  letter-spacing: 0.05em;
+  line-height: var(--sovereign-panel-header-leading);
+  margin-bottom: 0.2rem;
+  text-transform: uppercase;
+}
+
+.receipt-view__summary dd {
+  color: var(--sovereign-alert-amber);
+  font-family: var(--font-source-code);
+  font-size: var(--sovereign-code-size);
+  hyphens: none;
+  -webkit-hyphens: none;
+  line-height: var(--sovereign-code-leading);
+  margin: 0;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+.receipt-view__metric--teal {
+  color: var(--sovereign-resolution-teal);
+}
+
+.receipt-view__hash {
+  color: var(--sovereign-alert-amber);
+}
+
+.receipt-view__json {
+  border-radius: 0;
+}
