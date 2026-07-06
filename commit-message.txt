@@ -1,5 +1,5 @@
-fix(backend): close concurrency loops and harden secret validation
+refactor(backend): align dataset expunge paths and prune dead params
 
-Wrap receipt flush and commit in IntegrityError handling, eager-load
-dataset document records to prevent detachment, and reject blank
-SOVEREIGN_NODE_SECRET values at startup.
+Expunge ingested documents and child records in _ingest_file_sync to match
+_load_existing_documents, and drop the unused records argument from
+_build_mock_answer.

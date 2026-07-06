@@ -95,7 +95,7 @@ async def ask_question(
         ) from exc
 
     sieved_evidence = _split_sieved_evidence(airlock_result.sieved_content)
-    answer = _build_mock_answer(payload.question, records)
+    answer = _build_mock_answer(payload.question)
     attributions = await memory_service.assemble_source_attribution(records)
     sources = [
         SourceAttributionResponse(
@@ -191,17 +191,13 @@ def _split_sieved_evidence(sieved_content: str) -> list[str]:
     return chunks or [sieved_content.strip()]
 
 
-def _build_mock_answer(question: str, records: list[Record]) -> str:
-    """Generate a context-aware mock answer from the question and evidence records.
+def _build_mock_answer(question: str) -> str:
+    """Generate a context-aware mock answer from the question text.
 
     Property and transaction queries receive a descriptive 1908 household summary.
     All other matched queries default to the classic Fido institutional memory answer.
 
-    Callers must ensure ``records`` is non-empty; empty retrieval is handled by the
-    route handler before this helper is invoked.
-
     :param str question: Raw user question text from the request payload.
-    :param list[Record] records: Non-empty retrieved memory records for the question.
     :returns: Mock answer string aligned with the question intent.
     :rtype: str
     """

@@ -206,7 +206,8 @@ class DatasetService:
         """Read, validate, and persist a single dataset file synchronously.
 
         :param str filename: Name of the dataset file within ``datasets_path``.
-        :returns: Persisted source document row with associated records.
+        :returns: Persisted source document row with associated records, expunged
+            from the session so relationship pointers remain valid after return.
         :rtype: Document
         :raises DatasetEncodingError: If the file is empty or not valid UTF-8.
         :raises DatasetSchemaError: If the file extension or contents are invalid.
@@ -229,6 +230,9 @@ class DatasetService:
                 self._ingest_text_record(session, path, document, sanitized_text)
             session.commit()
             session.refresh(document)
+            for record in document.records:
+                session.expunge(record)
+            session.expunge(document)
 
         return document
 
