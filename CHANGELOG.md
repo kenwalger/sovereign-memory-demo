@@ -96,3 +96,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `POST /api/questions` maps `ReceiptDuplicateError` unresolved fallbacks to HTTP 409 and `ReceiptValidationError` to HTTP 422
 - Production CORS origins externalized via `SOVEREIGN_ALLOWED_ORIGINS` environment variable
 - `_calculate_confidence` returns `0.0` for empty record collections
+- Frontend aligned to Sovereign Systems terminal palette (obsidian, steel, amber/gold)
+- Primary UI header and philosophical tagline updated per brand specification
+- `SOVEREIGN_ENV` gates localhost CORS origins; production deployments lock to configured domains
+- Dataset ingestion decodes UTF-8 before author-footer sanitization and JSON parsing
+- Handbook typography synchronized: Myriad Pro hierarchy, Minion Pro body, Source Code Pro code frames (`24pt`/`16pt`/`9pt`/`13pt`/`9.5pt`/`8.5pt`)
+- Official palette tokens applied (`#378ADD` matrix blue, `#BA7517` alert amber, `#1D9E75` resolution teal, `#F5F5F5` code frames)

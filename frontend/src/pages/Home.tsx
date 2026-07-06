@@ -49,11 +49,11 @@ export function Home() {
   return (
     <main className="home">
       <header className="home__hero">
-        <p className="home__eyebrow">Sovereign Memory Demo</p>
-        <h1>Retrieval is not memory.</h1>
-        <p className="home__lede">
-          Trace every answer from question to evidence to forensic receipt across a
-          local institutional memory corpus.
+        <h1 className="sovereign-heading-1">
+          Sovereign Systems Specification Memory Demo
+        </h1>
+        <p className="home__lede sovereign-subtitle">
+          Information without Provenance is Just Gossip.
         </p>
       </header>
 

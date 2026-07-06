@@ -106,28 +106,49 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     engine.dispose()
 
 
+_LOCAL_DEV_ORIGINS: tuple[str, ...] = (
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+)
+"""tuple[str, ...]: Local Vite and dev-server origins permitted only in development mode."""
+
+_DEFAULT_PRODUCTION_ORIGIN = "https://demo.sovereignsystems.io"
+"""str: Fallback production origin when ``SOVEREIGN_ALLOWED_ORIGINS`` is unset."""
+
+
 def _resolve_allowed_origins() -> list[str]:
-    """Build the CORS allow-list from local dev hosts and configured production origins.
+    """Build the CORS allow-list from environment-scoped production and dev origins.
+
+    Localhost origins are included only when ``SOVEREIGN_ENV`` is ``development``
+    or when ``SOVEREIGN_ALLOWED_ORIGINS`` is completely absent. In all other
+    cases the allow-list is locked to configured production domains.
 
     :returns: Distinct origin URLs permitted for cross-origin browser access.
     :rtype: list[str]
     """
-    local_origins = [
-        "http://localhost:5173",
-        "http://127.0.0.1:5173",
-        "http://localhost:3000",
-        "http://127.0.0.1:3000",
-    ]
-    configured_origins = os.environ.get(
-        "SOVEREIGN_ALLOWED_ORIGINS",
-        "https://demo.sovereignsystems.io",
+    configured_origins = os.environ.get("SOVEREIGN_ALLOWED_ORIGINS")
+    sovereign_env = os.environ.get("SOVEREIGN_ENV", "")
+
+    if configured_origins is None:
+        production_origins = [_DEFAULT_PRODUCTION_ORIGIN]
+    else:
+        production_origins = [
+            origin.strip()
+            for origin in configured_origins.split(",")
+            if origin.strip()
+        ]
+
+    include_local = (
+        sovereign_env == "development"
+        or configured_origins is None
     )
-    production_origins = [
-        origin.strip()
-        for origin in configured_origins.split(",")
-        if origin.strip()
-    ]
-    return local_origins + production_origins
+
+    if include_local:
+        return list(_LOCAL_DEV_ORIGINS) + production_origins
+
+    return production_origins
 
 
 app = FastAPI(

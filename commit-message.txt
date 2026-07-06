@@ -1,5 +1,5 @@
-fix(api): correct ledger commit order and harden route error traps
+feat(ui): align brand identity and harden production CORS scope
 
-Persist forensic receipts to SQLite before sovereign ledger commits,
-map duplicate and validation receipt errors to structured HTTP responses,
-externalize production CORS origins, and guard empty confidence calculations.
+Apply Sovereign Systems terminal palette and specification copy to the
+frontend, gate localhost CORS behind SOVEREIGN_ENV, and decode dataset
+bytes to UTF-8 before sanitization and JSON parsing.

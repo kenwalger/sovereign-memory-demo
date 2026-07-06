@@ -39,11 +39,11 @@ export function EvidencePanel({ evidence, sources, loading }: EvidencePanelProps
           <>
             {hasEvidence && (
               <div className="evidence-block">
-                <h3 className="evidence-block__title">Context Chunks</h3>
+                <h3 className="evidence-block__title sovereign-heading-2">Context Chunks</h3>
                 <ul className="evidence-list">
                   {evidence.map((chunk, index) => (
                     <li key={`${index}-${chunk.slice(0, 24)}`}>
-                      <pre className="evidence-list__chunk">{chunk}</pre>
+                      <pre className="code-frame evidence-list__chunk">{chunk}</pre>
                     </li>
                   ))}
                 </ul>
@@ -51,7 +51,7 @@ export function EvidencePanel({ evidence, sources, loading }: EvidencePanelProps
             )}
             {hasSources && (
               <div className="evidence-block">
-                <h3 className="evidence-block__title">Source Attribution</h3>
+                <h3 className="evidence-block__title sovereign-heading-2">Source Attribution</h3>
                 <ul className="source-list">
                   {sources.map((source) => (
                     <li key={source.record_id} className="source-list__item">

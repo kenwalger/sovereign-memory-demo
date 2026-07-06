@@ -200,18 +200,19 @@ class DatasetService:
         """
         path = self._datasets_path / filename
         raw_bytes = path.read_bytes()
-        text = strip_author_footers(self._decode_utf8(path, raw_bytes))
+        decoded_text = self._decode_utf8(path, raw_bytes)
+        sanitized_text = strip_author_footers(decoded_text)
         suffix = path.suffix.lower()
         document_type = DOCUMENT_TYPE_BY_SUFFIX.get(suffix)
         if document_type is None:
             raise DatasetSchemaError(path, f"Unsupported file extension: {suffix}")
 
         with self._session_factory() as session:
-            document = self._persist_document(session, filename, document_type, text)
+            document = self._persist_document(session, filename, document_type, sanitized_text)
             if document_type == "json":
-                self._ingest_json_records(session, path, document, text)
+                self._ingest_json_records(session, path, document, sanitized_text)
             else:
-                self._ingest_text_record(session, path, document, text)
+                self._ingest_text_record(session, path, document, sanitized_text)
             session.commit()
             session.refresh(document)
 

@@ -137,3 +137,10 @@ Cross-referenced against [Technical Specification v1](project_specs/sovereign-me
 - [x] Route-level `ReceiptValidationError` mapped to HTTP 422
 - [x] Production CORS origins externalized via `SOVEREIGN_ALLOWED_ORIGINS`
 - [x] `_calculate_confidence` empty-collection guard returns `0.0`
+
+## Phase 10 — Brand Identity & Production Hardening
+
+- [x] Frontend header and tagline aligned to Sovereign Systems specification
+- [x] Terminal design system palette (obsidian, steel, amber/gold telemetry)
+- [x] `SOVEREIGN_ENV` development gate for localhost CORS origins
+- [x] Dataset ingestion UTF-8 decode before text sanitization and JSON parsing
