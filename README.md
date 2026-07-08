@@ -19,6 +19,16 @@ This project demonstrates how provenance, evidence, accountability, and Forensic
 Canonical reference implementation of the
 [Sovereign Systems Specification](https://github.com/kenwalger/sovereign-memory-demo).
 
+## What It Looks Like
+
+[ screenshot_placeholder ]
+
+Question
+→ Answer
+→ Evidence
+→ Forensic Receipt
+
+
 ## 🚀 Quick Start: Try These Queries
 
 Start the backend and frontend (see [Backend Quick Start](#backend-quick-start)
