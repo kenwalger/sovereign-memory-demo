@@ -17,19 +17,47 @@ The Sovereign Memory Demo answers:
 This project demonstrates how provenance, evidence, accountability, and Forensic Receipts transform retrieval into trustworthy institutional memory.
 
 Canonical reference implementation of the
-[Sovereign Systems Specification](https://github.com/kenwalger/sovereign-memory-demo).
+[Sovereign Systems Specification](https://www.sovereignplatform.dev?utm_source=sovereign-memory-demo&utm_medium=github&utm_campaign=memory-demo)
+
+## Concepts Demonstrated
+
+- Memory as Infrastructure
+- Digital Attic
+- Forensic Receipt
+- Write-Side Custody
+- Prose Tax
+- Institutional Memory
 
 ## What It Looks Like
 
-- [Full Application](images/full_screen_shot.png)
-- [Question and Answer Results](images/quetion_and_answer.png)
-- [Forensic Receipt Highlights](images/forensic_receipt_highlights.png)
-- [Source Attribution Details](images/source_attribution_details.png)
+### Full Application
+![Full Application](images/full_screen_shot.png)  
+
+### Question and Answer Panel
+![Question and Answer Results](images/quetion_and_answer.png)
+
+### Forensic Receipt Details
+![Forensic Receipt Highlights](images/forensic_receipt_highlights.png)  
+
+### Source Attribution Details
+![Source Attribution Details](images/source_attribution_details.png)  
+
 
 Question
 → Answer
 → Evidence
 → Forensic Receipt
+
+### See It In Action
+
+![Quick Visual Demo](images/Memory-Demo.gif)
+
+
+## Related Resources
+
+- [Specification](https://www.sovereignplatform.dev?utm_source=sovereign-memory-demo&utm_medium=github&utm_campaign=memory-demo)
+- [Demos](https://www.sovereignplatform.dev/demos?utm_source=sovereign-memory-demo&utm_medium=github&utm_campaign=memory-demo)
+- [SDK Packages](https://sovereignplatform.dev/sdk/overview.html?utm_source=sovereign-memory-demo&utm_medium=github&utm_campaign=memory-demo)
 
 
 ## 🚀 Quick Start: Try These Queries
