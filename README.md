@@ -1,5 +1,13 @@
 # Sovereign Memory Demo
 
+The Sovereign Memory Demo is the flagship reference implementation of the Sovereign Systems Specification.
+
+It demonstrates a simple thesis:
+
+> Information without provenance is just gossip.
+
+Rather than focusing solely on retrieval, the demo shows how provenance, evidence, accountability, and Forensic Receipts create trustworthy institutional memory.
+
 Canonical reference implementation of the
 [Sovereign Systems Specification](https://github.com/kenwalger/sovereign-memory-demo).
 
