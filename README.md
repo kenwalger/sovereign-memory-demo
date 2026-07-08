@@ -2,21 +2,22 @@
 
 The Sovereign Memory Demo is the flagship reference implementation of the Sovereign Systems Specification.
 
-It demonstrates a simple thesis:
+## The Thesis
 
 > Information without provenance is just gossip.
 
-Rather than focusing solely on retrieval, the demo shows how provenance, evidence, accountability, and Forensic Receipts create trustworthy institutional memory.
+Most AI systems answer:
+
+**Can I find it?**
+
+The Sovereign Memory Demo answers:
+
+**Can I trust it?**
+
+This project demonstrates how provenance, evidence, accountability, and Forensic Receipts transform retrieval into trustworthy institutional memory.
 
 Canonical reference implementation of the
 [Sovereign Systems Specification](https://github.com/kenwalger/sovereign-memory-demo).
-
-This application demonstrates that **semantic retrieval** and **immutable
-institutional memory** are not equivalent. Retrieval answers *"Can I find it?"*
-— memory answers *"Can I trust it?"*
-
-**Production frontend target:**
-[sovereignplatform.dev/demos/memory](https://sovereignplatform.dev/demos/memory)
 
 ## 🚀 Quick Start: Try These Queries
 
