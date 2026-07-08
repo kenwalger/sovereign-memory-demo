@@ -21,7 +21,10 @@ Canonical reference implementation of the
 
 ## What It Looks Like
 
-[ screenshot_placeholder ]
+- [Full Application](images/full_screen_shot.png)
+- [Question and Answer Results](images/quetion_and_answer.png)
+- [Forensic Receipt Highlights](images/forensic_receipt_highlights.png)
+- [Source Attribution Details](images/source_attribution_details.png)
 
 Question
 → Answer

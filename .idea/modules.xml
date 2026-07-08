@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/sovereign-memory-demo.iml" filepath="$PROJECT_DIR$/.idea/sovereign-memory-demo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/sovereign-memory-demo-backend.iml" filepath="$PROJECT_DIR$/.idea/sovereign-memory-demo-backend.iml" />
     </modules>
   </component>
 </project>
