@@ -1,5 +1,11 @@
 # Sovereign Memory Demo
 
+[![Python Version](https://img.shields.io/badge/python-3.14%2B-24292e.svg)](https://docs.python.org/3.14/)
+[![Package Manager: uv](https://img.shields.io/badge/managed%20by-uv-261230.svg?logo=astral)](https://github.com/astral-sh/uv)
+[![Paradigm: Local-First](https://img.shields.io/badge/architecture-local--first-378ADD.svg)](https://github.com/kenwalger/sovereign-memory-demo)
+[![Design: Spec Compliant](https://img.shields.io/badge/design-spec%20compliant-1D9E75.svg)](./project_specs/)
+[![License: MIT](https://img.shields.io/badge/license-MIT-BA7517.svg)](LICENSE)  
+
 The Sovereign Memory Demo is the flagship reference implementation of the Sovereign Systems Specification.
 
 ## The Thesis
